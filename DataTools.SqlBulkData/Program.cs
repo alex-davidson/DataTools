@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Common;
 using System.Threading.Tasks;
 
 namespace DataTools.SqlBulkData
@@ -27,6 +28,14 @@ namespace DataTools.SqlBulkData
 
         public Task<int> Run()
         {
+            var sqlServerDatabase = new SqlServerDatabase(SubjectDatabase.GetConnectionString());
+            var versionString = new GetDatabaseServerVersionQuery().Execute(sqlServerDatabase);
+            if (versionString == null)
+            {
+                Console.Error.WriteLine("Database did not return a version string.");
+                return Task.FromResult(2);
+            }
+            Console.Error.WriteLine($"{sqlServerDatabase.Server}: {versionString}");
             return Task.FromResult(0);
         }
     }
