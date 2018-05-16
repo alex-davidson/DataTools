@@ -47,14 +47,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArgumentParser.cs" />
+    <Compile Include="Serialisation\ChunkBookmark.cs" />
+    <Compile Include="Serialisation\ChunkedFileHeader.cs" />
+    <Compile Include="Serialisation\ChunkedFileReader.cs" />
+    <Compile Include="Serialisation\IChunkReader.cs" />
     <Compile Include="Serialisation\RangeStream.cs" />
     <Compile Include="Serialisation\Serialiser.cs" />
+    <Compile Include="Serialisation\ChunkedFileWriter.cs" />
     <Compile Include="GetDatabaseServerVersionQuery.cs" />
     <Compile Include="InvalidArgumentsException.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProgramMode.cs" />
     <Compile Include="ProgramSubjectDatabase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Serialisation\IChunkWriter.cs" />
     <Compile Include="Serialisation\ReservedField.cs" />
     <Compile Include="Sql.cs" />
     <Compile Include="SqlServerDatabase.cs" />
