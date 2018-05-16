@@ -55,6 +55,7 @@
     <Compile Include="ProgramMode.cs" />
     <Compile Include="ProgramSubjectDatabase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Serialisation\ReservedField.cs" />
     <Compile Include="Sql.cs" />
     <Compile Include="SqlServerDatabase.cs" />
   </ItemGroup>
