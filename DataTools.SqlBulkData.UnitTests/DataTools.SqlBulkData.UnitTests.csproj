@@ -46,6 +46,7 @@
     <Compile Include="ArgumentParserTests.cs" />
     <Compile Include="BitSetPackerTests.cs" />
     <Compile Include="BulkTableFileReaderWriterTests.cs" />
+    <Compile Include="MockDataRecord.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serialisation\ChunkedFileReaderTests.cs" />
     <Compile Include="Serialisation\ReservedFieldTests.cs" />

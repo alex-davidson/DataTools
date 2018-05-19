@@ -51,6 +51,7 @@
     <Compile Include="BulkTableFileReader.cs" />
     <Compile Include="BulkTableFileWriter.cs" />
     <Compile Include="PersistedModel\TableIdentifier.cs" />
+    <Compile Include="DataReaderBase.cs" />
     <Compile Include="IBulkTableData.cs" />
     <Compile Include="PersistedModel\TableColumns.cs" />
     <Compile Include="PersistedModel\TableDescriptor.cs" />
