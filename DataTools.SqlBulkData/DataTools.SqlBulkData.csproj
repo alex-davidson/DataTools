@@ -66,12 +66,14 @@
     <Compile Include="DataReaderBase.cs" />
     <Compile Include="InvalidSerialiserException.cs" />
     <Compile Include="PersistedModel\ColumnDataTypeClassification.cs" />
+    <Compile Include="GetAllTablesQuery.cs" />
     <Compile Include="IBulkRowReader.cs" />
     <Compile Include="IBulkTableData.cs" />
     <Compile Include="PersistedModel\TableColumns.cs" />
     <Compile Include="PersistedModel\TableDescriptor.cs" />
     <Compile Include="Columns\IColumnSerialiser.cs" />
     <Compile Include="NullFieldMap.cs" />
+    <Compile Include="Schema\Table.cs" />
     <Compile Include="Serialisation\ChunkBookmark.cs" />
     <Compile Include="Serialisation\ChunkedFileHeader.cs" />
     <Compile Include="Serialisation\ChunkedFileHeaderSerialiser.cs" />
@@ -92,6 +94,7 @@
     <Compile Include="Serialisation\IChunkWriter.cs" />
     <Compile Include="Serialisation\ReservedField.cs" />
     <Compile Include="Sql.cs" />
+    <Compile Include="Schema\SqlDbTypeInterpreter.cs" />
     <Compile Include="SqlServerDatabase.cs" />
     <Compile Include="TypeIds.cs" />
     <Compile Include="UnrecognisedFileFormatException.cs" />
