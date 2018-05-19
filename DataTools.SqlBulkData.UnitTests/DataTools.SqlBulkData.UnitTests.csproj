@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="ArgumentParserTests.cs" />
     <Compile Include="BitSetPackerTests.cs" />
+    <Compile Include="BulkRowReaderWriterTests.cs" />
     <Compile Include="BulkTableFileReaderWriterTests.cs" />
     <Compile Include="Columns\ColumnSerialiserTests.cs" />
     <Compile Include="MockDataRecord.cs" />
