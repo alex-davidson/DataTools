@@ -47,12 +47,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArgumentParser.cs" />
+    <Compile Include="BitSetPacker.cs" />
     <Compile Include="BulkTableFileReader.cs" />
     <Compile Include="BulkTableFileWriter.cs" />
     <Compile Include="PersistedModel\TableIdentifier.cs" />
     <Compile Include="IBulkTableData.cs" />
     <Compile Include="PersistedModel\TableColumns.cs" />
     <Compile Include="PersistedModel\TableDescriptor.cs" />
+    <Compile Include="Columns\IColumnSerialiser.cs" />
+    <Compile Include="NullFieldMap.cs" />
     <Compile Include="Serialisation\ChunkBookmark.cs" />
     <Compile Include="Serialisation\ChunkedFileHeader.cs" />
     <Compile Include="Serialisation\ChunkedFileHeaderSerialiser.cs" />
