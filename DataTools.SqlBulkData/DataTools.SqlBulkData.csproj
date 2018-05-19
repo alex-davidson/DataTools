@@ -47,10 +47,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArgumentParser.cs" />
+    <Compile Include="BulkTableFileReader.cs" />
+    <Compile Include="BulkTableFileWriter.cs" />
+    <Compile Include="PersistedModel\TableIdentifier.cs" />
+    <Compile Include="IBulkTableData.cs" />
+    <Compile Include="PersistedModel\TableColumns.cs" />
+    <Compile Include="PersistedModel\TableDescriptor.cs" />
     <Compile Include="Serialisation\ChunkBookmark.cs" />
     <Compile Include="Serialisation\ChunkedFileHeader.cs" />
     <Compile Include="Serialisation\ChunkedFileHeaderSerialiser.cs" />
     <Compile Include="Serialisation\ChunkedFileReader.cs" />
+    <Compile Include="PersistedModel\ColumnDataType.cs" />
+    <Compile Include="PersistedModel\ColumnDescriptor.cs" />
+    <Compile Include="PersistedModel\ColumnFlags.cs" />
     <Compile Include="Serialisation\IChunkReader.cs" />
     <Compile Include="Serialisation\RangeStream.cs" />
     <Compile Include="Serialisation\Serialiser.cs" />
@@ -65,10 +74,13 @@
     <Compile Include="Serialisation\ReservedField.cs" />
     <Compile Include="Sql.cs" />
     <Compile Include="SqlServerDatabase.cs" />
+    <Compile Include="TypeIds.cs" />
+    <Compile Include="UnrecognisedFileFormatException.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="README.md" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
