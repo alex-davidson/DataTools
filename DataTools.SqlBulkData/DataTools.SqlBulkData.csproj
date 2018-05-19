@@ -51,6 +51,13 @@
     <Compile Include="BulkTableFileReader.cs" />
     <Compile Include="BulkTableFileWriter.cs" />
     <Compile Include="PersistedModel\TableIdentifier.cs" />
+    <Compile Include="Columns\IColumnDefinition.cs" />
+    <Compile Include="Columns\SqlServerBigIntColumn.cs" />
+    <Compile Include="Columns\SqlServerFixedLengthANSIStringColumn.cs" />
+    <Compile Include="Columns\SqlServerIntColumn.cs" />
+    <Compile Include="Columns\SqlServerVariableLengthStringColumn.cs" />
+    <Compile Include="Columns\SqlServerSmallIntColumn.cs" />
+    <Compile Include="Columns\SqlServerTinyIntColumn.cs" />
     <Compile Include="DataReaderBase.cs" />
     <Compile Include="IBulkTableData.cs" />
     <Compile Include="PersistedModel\TableColumns.cs" />

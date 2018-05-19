@@ -1,0 +1,108 @@
+﻿using System;
+using System.IO;
+using System.Linq;
+using DataTools.SqlBulkData.Columns;
+using DataTools.SqlBulkData.PersistedModel;
+using NUnit.Framework;
+
+namespace DataTools.SqlBulkData.UnitTests.Columns
+{
+    [TestFixture]
+    public class ColumnSerialiserTests
+    {
+        public static ICase[] Cases = {
+            new Case<long> { Column = f => new SqlServerBigIntColumn { Flags = f }, TestValue = -26872773602773242L },
+            new Case<int> { Column = f => new SqlServerIntColumn { Flags = f }, TestValue = -42 },
+            new Case<short> { Column = f => new SqlServerSmallIntColumn { Flags = f }, TestValue = -42 },
+            new Case<byte> { Column = f => new SqlServerTinyIntColumn { Flags = f }, TestValue = 42 },
+            new Case<string> { Column = f => new SqlServerVariableLengthStringColumn { Flags = f }, TestValue = "ASCII string" },
+            new Case<string> { Column = f => new SqlServerFixedLengthANSIStringColumn(12) { Flags = f }, TestValue = "ASCII string" },
+            new Case<string> { Column = f => new SqlServerVariableLengthStringColumn { Flags = f }, TestValue = "Ṳṅḯḉоɖέ string" },
+        };
+
+        [Test]
+        public void AssertThatValueRoundtrips([ValueSource(nameof(Cases))] ICase testCase, [Values] ColumnFlags flags)
+        {
+            var column = testCase.Column(flags);
+            var serialiser = column.GetSerialiser();
+            Assert.That(testCase.TestValue.GetType(), Is.EqualTo(serialiser.DotNetType));
+
+            var roundtripped = Roundtrip(column, testCase.TestValue);
+            Assert.That(roundtripped, Is.EqualTo(testCase.TestValue));
+        }
+
+        [Test]
+        public void AssertThatNullValueRoundtripsThroughNullableSerialiser([ValueSource(nameof(Cases))] ICase testCase)
+        {
+            var column = testCase.Column(ColumnFlags.Nullable);
+
+            Roundtrip(column, null);
+        }
+
+        [Test, Description("This test is included for completeness, but the serialiser should not be called for null columns when AbsentIfNull is set.")]
+        public void AssertThatNullValueRoundtripsThroughAbsentWhenNullSerialiser([ValueSource(nameof(Cases))] ICase testCase)
+        {
+            var column = testCase.Column(ColumnFlags.AbsentWhenNull);
+
+            Roundtrip(column, null);
+        }
+
+        [Test, Description("This test is included for completeness, but we really don't care how nulls are roundtripped (or not) for not-null columns.")]
+        public void AssertThatNullValueDoesNotRoundtripThroughNotNullableSerialiser([ValueSource(nameof(Cases))] ICase testCase)
+        {
+            var column = testCase.Column(ColumnFlags.None);
+
+            try
+            {
+                Assert.IsNotNull(Roundtrip(column, null));
+            }
+            catch (InvalidDataException) { Assert.Pass(); }
+        }
+
+        [Test]
+        public void AllColumnSerialisersAreTested()
+        {
+            var allTypes = typeof(IColumnSerialiser).Assembly.GetTypes()
+                .Where(c => c.IsClass && !c.IsAbstract)
+                .Where(typeof(IColumnDefinition).IsAssignableFrom)
+                .ToArray();
+            var testedTypes = Cases.Select(c => c.Column(ColumnFlags.None).GetType());
+            Assert.That(allTypes.Except(testedTypes).ToArray(), Is.Empty);
+
+            // Sanity check. Shouldn't be testing classes which don't exist.
+            Assert.That(testedTypes.Except(allTypes).ToArray(), Is.Empty);
+        }
+
+        private object Roundtrip(IColumnDefinition column, object value)
+        {
+            var nullMap = new [] { value == null && column.GetSerialiser().Flags.IsNullable() };
+            var stream = new MemoryStream();
+            // Verify alignment symmetry by starting off misaligned.
+            stream.WriteByte(0);
+
+            column.GetSerialiser().Write(stream, new MockDataRecord(new [] { "Field" }, new [] { value ?? DBNull.Value }), 0);
+            var end = stream.Position;
+
+            stream.Position = 1;
+
+            var roundtripped = column.GetSerialiser().Read(stream, 0, nullMap);
+            Assert.That(stream.Position, Is.EqualTo(end));
+            return roundtripped;
+        }
+
+        public interface ICase
+        {
+            Func<ColumnFlags, IColumnDefinition> Column { get; }
+            object TestValue { get; }
+        }
+
+        public class Case<T> : ICase
+        {
+            public Func<ColumnFlags, IColumnDefinition> Column { get; set; }
+            public T TestValue { get; set; }
+            object ICase.TestValue => TestValue;
+
+            public override string ToString() => $"{Column(ColumnFlags.None).GetType().Name}: {TestValue}";
+        }
+    }
+}
