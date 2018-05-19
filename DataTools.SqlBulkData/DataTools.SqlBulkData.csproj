@@ -49,6 +49,7 @@
     <Compile Include="ArgumentParser.cs" />
     <Compile Include="Serialisation\ChunkBookmark.cs" />
     <Compile Include="Serialisation\ChunkedFileHeader.cs" />
+    <Compile Include="Serialisation\ChunkedFileHeaderSerialiser.cs" />
     <Compile Include="Serialisation\ChunkedFileReader.cs" />
     <Compile Include="Serialisation\IChunkReader.cs" />
     <Compile Include="Serialisation\RangeStream.cs" />
