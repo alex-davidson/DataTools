@@ -50,6 +50,7 @@
     <Compile Include="BitSetPacker.cs" />
     <Compile Include="BulkTableFileReader.cs" />
     <Compile Include="BulkTableFileWriter.cs" />
+    <Compile Include="ColumnSerialiserValidator.cs" />
     <Compile Include="PersistedModel\TableIdentifier.cs" />
     <Compile Include="Columns\IColumnDefinition.cs" />
     <Compile Include="Columns\SqlServerBigIntColumn.cs" />
@@ -59,6 +60,8 @@
     <Compile Include="Columns\SqlServerSmallIntColumn.cs" />
     <Compile Include="Columns\SqlServerTinyIntColumn.cs" />
     <Compile Include="DataReaderBase.cs" />
+    <Compile Include="InvalidSerialiserException.cs" />
+    <Compile Include="PersistedModel\ColumnDataTypeClassification.cs" />
     <Compile Include="IBulkTableData.cs" />
     <Compile Include="PersistedModel\TableColumns.cs" />
     <Compile Include="PersistedModel\TableDescriptor.cs" />

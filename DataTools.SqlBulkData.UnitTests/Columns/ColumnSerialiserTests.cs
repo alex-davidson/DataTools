@@ -25,6 +25,7 @@ namespace DataTools.SqlBulkData.UnitTests.Columns
         {
             var column = testCase.Column(flags);
             var serialiser = column.GetSerialiser();
+            new ColumnSerialiserValidator().Validate(serialiser);
             Assert.That(testCase.TestValue.GetType(), Is.EqualTo(serialiser.DotNetType));
 
             var roundtripped = Roundtrip(column, testCase.TestValue);
@@ -35,6 +36,7 @@ namespace DataTools.SqlBulkData.UnitTests.Columns
         public void AssertThatNullValueRoundtripsThroughNullableSerialiser([ValueSource(nameof(Cases))] ICase testCase)
         {
             var column = testCase.Column(ColumnFlags.Nullable);
+            new ColumnSerialiserValidator().Validate(column.GetSerialiser());
 
             Roundtrip(column, null);
         }
@@ -43,6 +45,7 @@ namespace DataTools.SqlBulkData.UnitTests.Columns
         public void AssertThatNullValueRoundtripsThroughAbsentWhenNullSerialiser([ValueSource(nameof(Cases))] ICase testCase)
         {
             var column = testCase.Column(ColumnFlags.AbsentWhenNull);
+            new ColumnSerialiserValidator().Validate(column.GetSerialiser());
 
             Roundtrip(column, null);
         }
@@ -51,6 +54,7 @@ namespace DataTools.SqlBulkData.UnitTests.Columns
         public void AssertThatNullValueDoesNotRoundtripThroughNotNullableSerialiser([ValueSource(nameof(Cases))] ICase testCase)
         {
             var column = testCase.Column(ColumnFlags.None);
+            new ColumnSerialiserValidator().Validate(column.GetSerialiser());
 
             try
             {

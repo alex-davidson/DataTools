@@ -1,4 +1,6 @@
-﻿namespace DataTools.SqlBulkData.PersistedModel
+﻿using System;
+
+namespace DataTools.SqlBulkData.PersistedModel
 {
     public enum ColumnDataType : int
     {
@@ -31,5 +33,31 @@
         /// A sequence of bytes, the count of which is indicated by the column's Length.
         /// </summary>
         FixedLengthBytes = 7,
+    }
+
+    public static class ColumnDataTypeExtensions
+    {
+        public static ColumnDataTypeClassification Classify(this ColumnDataType dataType)
+        {
+            switch (dataType)
+            {
+                case ColumnDataType.SignedInteger:
+                case ColumnDataType.UnsignedInteger:
+                case ColumnDataType.FloatingPoint:
+                    return ColumnDataTypeClassification.FixedLengthPrimitive;
+
+                case ColumnDataType.FixedLengthString:
+                case ColumnDataType.FixedLengthBytes:
+                    return ColumnDataTypeClassification.FixedLengthBuffer;
+
+                case ColumnDataType.String:
+                case ColumnDataType.VariableLengthBytes:
+                    return ColumnDataTypeClassification.VariableLengthBuffer;
+
+                case ColumnDataType.Invalid:
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
     }
 }
