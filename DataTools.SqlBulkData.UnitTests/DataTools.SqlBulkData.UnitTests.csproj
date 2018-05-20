@@ -54,6 +54,8 @@
     <Compile Include="Serialisation\ReservedFieldTests.cs" />
     <Compile Include="Serialisation\ChunkedFileWriterTests.cs" />
     <Compile Include="Serialisation\SerialiserTests.cs" />
+    <Compile Include="SqlServerExportModelBuilderTests.cs" />
+    <Compile Include="SqlServerImportModelBuilderTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -64,8 +64,11 @@
     <Compile Include="Columns\SqlServerSmallIntColumn.cs" />
     <Compile Include="Columns\SqlServerTinyIntColumn.cs" />
     <Compile Include="DataReaderBase.cs" />
+    <Compile Include="IFieldCorrelator.cs" />
+    <Compile Include="ImportModel.cs" />
     <Compile Include="InvalidSerialiserException.cs" />
     <Compile Include="PersistedModel\ColumnDataTypeClassification.cs" />
+    <Compile Include="ExportModel.cs" />
     <Compile Include="GetAllTablesQuery.cs" />
     <Compile Include="IBulkRowReader.cs" />
     <Compile Include="IBulkTableData.cs" />
@@ -96,7 +99,14 @@
     <Compile Include="Sql.cs" />
     <Compile Include="Schema\SqlDbTypeInterpreter.cs" />
     <Compile Include="SqlServerDatabase.cs" />
+    <Compile Include="SqlServerImportModelBuilder.cs" />
+    <Compile Include="SqlServerExportModelBuilder.cs" />
+    <Compile Include="ITableGuidPolicy.cs" />
+    <Compile Include="NameBasedTableGuidPolicy.cs" />
+    <Compile Include="RandomTableGuidPolicy.cs" />
+    <Compile Include="StrictFieldNameCorrelator.cs" />
     <Compile Include="TypeIds.cs" />
+    <Compile Include="UncorrelatedFieldsException.cs" />
     <Compile Include="UnrecognisedFileFormatException.cs" />
   </ItemGroup>
   <ItemGroup>
