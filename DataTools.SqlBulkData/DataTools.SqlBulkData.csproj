@@ -55,6 +55,9 @@
     <Compile Include="BulkRowReader.cs" />
     <Compile Include="BulkRowWriter.cs" />
     <Compile Include="CancelKeyMonitor.cs" />
+    <Compile Include="CheckConstraintsStatement.cs" />
+    <Compile Include="DisableConstraintsStatement.cs" />
+    <Compile Include="EnableConstraintsStatement.cs" />
     <Compile Include="LoggingVerbosity.cs" />
     <Compile Include="BulkTableFileReader.cs" />
     <Compile Include="BulkTableFileWriter.cs" />
@@ -112,9 +115,11 @@
     <Compile Include="NameBasedTableGuidPolicy.cs" />
     <Compile Include="RandomTableGuidPolicy.cs" />
     <Compile Include="StrictFieldNameCorrelator.cs" />
+    <Compile Include="TruncateTableStatement.cs" />
     <Compile Include="TypeIds.cs" />
     <Compile Include="UncorrelatedFieldsException.cs" />
     <Compile Include="UnrecognisedFileFormatException.cs" />
+    <Compile Include="ViolatedConstraintsException.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
