@@ -68,7 +68,7 @@ namespace DataTools.SqlBulkData
         public LoggingVerbosity LoggingVerbosity { get; } = new LoggingVerbosity();
         public bool PauseBeforeExit { get; set; }
 
-        public Task<int> Run()
+        public async Task<int> Run()
         {
             BasicConfigurator.Configure(new ConsoleAppender {
                 Name = "Console.STDERR",
@@ -84,10 +84,22 @@ namespace DataTools.SqlBulkData
             if (versionString == null)
             {
                 log.Error("Database did not return a version string.");
-                return Task.FromResult(2);
+                return 2;
             }
             log.Info($"{sqlServerDatabase.Server}: {versionString}");
-            return Task.FromResult(0);
+
+            if (Mode == ProgramMode.Export)
+            {
+                var job = new SqlServerExportDatabaseJob();
+                await job.Execute(sqlServerDatabase, BulkFilesPath, cancelMonitor.GetToken());
+            }
+            else if (Mode == ProgramMode.Import)
+            {
+                var job = new SqlServerImportTablesJob();
+                await job.Execute(sqlServerDatabase, BulkFilesPath, cancelMonitor.GetToken());
+            }
+
+            return 0;
         }
     }
 }

@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="ArgumentParser.cs" />
     <Compile Include="BitSetPacker.cs" />
+    <Compile Include="BulkFileStreamFactory.cs" />
     <Compile Include="BulkRowDataReader.cs" />
     <Compile Include="BulkRowReader.cs" />
     <Compile Include="BulkRowWriter.cs" />
@@ -76,8 +77,11 @@
     <Compile Include="ImportModel.cs" />
     <Compile Include="InvalidSerialiserException.cs" />
     <Compile Include="PersistedModel\ColumnDataTypeClassification.cs" />
+    <Compile Include="SemaphoreExtensions.cs" />
     <Compile Include="SqlServerBulkTableExport.cs" />
     <Compile Include="SqlServerBulkTableImport.cs" />
+    <Compile Include="SqlServerImportTablesJob.cs" />
+    <Compile Include="SqlServerExportDatabaseJob.cs" />
     <Compile Include="ExportModel.cs" />
     <Compile Include="GetAllTablesQuery.cs" />
     <Compile Include="IBulkRowReader.cs" />
@@ -115,6 +119,7 @@
     <Compile Include="NameBasedTableGuidPolicy.cs" />
     <Compile Include="RandomTableGuidPolicy.cs" />
     <Compile Include="StrictFieldNameCorrelator.cs" />
+    <Compile Include="TableFileNamingRule.cs" />
     <Compile Include="TruncateTableStatement.cs" />
     <Compile Include="TypeIds.cs" />
     <Compile Include="UncorrelatedFieldsException.cs" />
