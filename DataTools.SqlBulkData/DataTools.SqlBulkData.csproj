@@ -54,6 +54,7 @@
     <Compile Include="BulkRowDataReader.cs" />
     <Compile Include="BulkRowReader.cs" />
     <Compile Include="BulkRowWriter.cs" />
+    <Compile Include="CancelKeyMonitor.cs" />
     <Compile Include="LoggingVerbosity.cs" />
     <Compile Include="BulkTableFileReader.cs" />
     <Compile Include="BulkTableFileWriter.cs" />

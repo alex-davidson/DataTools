@@ -44,6 +44,11 @@ namespace DataTools.SqlBulkData
                 }
                 return 3;
             }
+            catch (OperationCanceledException)
+            {
+                log.Warn("Cancelled.");
+                return 255;
+            }
             catch (Exception ex)
             {
                 log.Error(ex);
@@ -65,6 +70,8 @@ namespace DataTools.SqlBulkData
                 Target = "Console.Error",
                 Threshold = LoggingVerbosity.Current
             });
+            var cancelMonitor = new CancelKeyMonitor();
+            cancelMonitor.LogRequestsTo(log);
 
             var sqlServerDatabase = new SqlServerDatabase(SubjectDatabase.GetConnectionString());
             var versionString = new GetDatabaseServerVersionQuery().Execute(sqlServerDatabase);
