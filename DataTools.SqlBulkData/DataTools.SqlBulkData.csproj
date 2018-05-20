@@ -73,6 +73,8 @@
     <Compile Include="ImportModel.cs" />
     <Compile Include="InvalidSerialiserException.cs" />
     <Compile Include="PersistedModel\ColumnDataTypeClassification.cs" />
+    <Compile Include="SqlServerBulkTableExport.cs" />
+    <Compile Include="SqlServerBulkTableImport.cs" />
     <Compile Include="ExportModel.cs" />
     <Compile Include="GetAllTablesQuery.cs" />
     <Compile Include="IBulkRowReader.cs" />
