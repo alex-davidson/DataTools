@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using log4net;
 using log4net.Appender;
@@ -13,12 +14,13 @@ namespace DataTools.SqlBulkData
 
         static int Main(string[] args)
         {
+            var sw = Stopwatch.StartNew();
             var program = new Program();
             try
             {
                 new ArgumentParser().Parse(args, program);
                 var exitCode = program.Run().GetAwaiter().GetResult();
-
+                sw.Stop();
                 if (program.PauseBeforeExit)
                 {
                     Console.Error.WriteLine("Press any key to exit...");
@@ -53,6 +55,10 @@ namespace DataTools.SqlBulkData
             {
                 log.Error(ex);
                 return 4;
+            }
+            finally
+            {
+                log.Debug($"Execution time: {sw.Elapsed}");
             }
         }
 
