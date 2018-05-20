@@ -37,6 +37,15 @@ namespace DataTools.SqlBulkData
                         if (!iterator.MoveNext()) throw new InvalidArgumentsException("Expected another parameter after --files");
                         program.BulkFilesPath = Path.GetFullPath(iterator.Current).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
                         break;
+                    case "-v":
+                        program.LoggingVerbosity.Increase();
+                        break;
+                    case "-q":
+                        program.LoggingVerbosity.Decrease();
+                        break;
+                    case "--pause":
+                        program.PauseBeforeExit = true;
+                        break;
                     default:
                         throw new InvalidArgumentsException($"Unrecognised argument: {iterator.Current}");
                 }

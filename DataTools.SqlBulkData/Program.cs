@@ -1,18 +1,30 @@
 ﻿using System;
-using System.Data.Common;
 using System.Threading.Tasks;
+using log4net;
+using log4net.Appender;
+using log4net.Config;
+using log4net.Layout;
 
 namespace DataTools.SqlBulkData
 {
     public class Program
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(Program));
+
         static int Main(string[] args)
         {
+            var program = new Program();
             try
             {
-                var program = new Program();
                 new ArgumentParser().Parse(args, program);
-                return program.Run().GetAwaiter().GetResult();
+                var exitCode = program.Run().GetAwaiter().GetResult();
+
+                if (program.PauseBeforeExit)
+                {
+                    Console.Error.WriteLine("Press any key to exit...");
+                    Console.ReadKey();
+                }
+                return exitCode;
             }
             catch (InvalidArgumentsException ex)
             {
@@ -20,22 +32,48 @@ namespace DataTools.SqlBulkData
                 new ArgumentParser().WriteUsage(Console.Error);
                 return 1;
             }
+            catch (ApplicationException ex)
+            {
+                if (log.IsDebugEnabled)
+                {
+                    log.Error(ex);
+                }
+                else
+                {
+                    log.Error(ex.Message);
+                }
+                return 3;
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                return 4;
+            }
         }
 
         public ProgramMode Mode { get; set; }
         public string BulkFilesPath { get; set; }
         public ProgramSubjectDatabase SubjectDatabase { get; set; } = new ProgramSubjectDatabase();
+        public LoggingVerbosity LoggingVerbosity { get; } = new LoggingVerbosity();
+        public bool PauseBeforeExit { get; set; }
 
         public Task<int> Run()
         {
+            BasicConfigurator.Configure(new ConsoleAppender {
+                Name = "Console.STDERR",
+                Layout = new PatternLayout("%message%newline"),
+                Target = "Console.Error",
+                Threshold = LoggingVerbosity.Current
+            });
+
             var sqlServerDatabase = new SqlServerDatabase(SubjectDatabase.GetConnectionString());
             var versionString = new GetDatabaseServerVersionQuery().Execute(sqlServerDatabase);
             if (versionString == null)
             {
-                Console.Error.WriteLine("Database did not return a version string.");
+                log.Error("Database did not return a version string.");
                 return Task.FromResult(2);
             }
-            Console.Error.WriteLine($"{sqlServerDatabase.Server}: {versionString}");
+            log.Info($"{sqlServerDatabase.Server}: {versionString}");
             return Task.FromResult(0);
         }
     }
