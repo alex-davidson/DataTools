@@ -80,6 +80,7 @@
     <Compile Include="SemaphoreExtensions.cs" />
     <Compile Include="SqlServerBulkTableExport.cs" />
     <Compile Include="SqlServerBulkTableImport.cs" />
+    <Compile Include="SqlServerDatabaseEqualityComparer.cs" />
     <Compile Include="SqlServerImportTablesJob.cs" />
     <Compile Include="SqlServerExportDatabaseJob.cs" />
     <Compile Include="ExportModel.cs" />

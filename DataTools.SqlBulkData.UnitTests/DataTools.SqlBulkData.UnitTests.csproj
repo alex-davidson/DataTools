@@ -48,12 +48,16 @@
     <Compile Include="BulkRowReaderWriterTests.cs" />
     <Compile Include="BulkTableFileReaderWriterTests.cs" />
     <Compile Include="Columns\ColumnSerialiserTests.cs" />
+    <Compile Include="GetAllTablesQueryTests.cs" />
+    <Compile Include="GetDatabaseServerVersionQueryTests.cs" />
+    <Compile Include="IntegrationTesting\TestDatabase.cs" />
     <Compile Include="MockDataRecord.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serialisation\ChunkedFileReaderTests.cs" />
     <Compile Include="Serialisation\ReservedFieldTests.cs" />
     <Compile Include="Serialisation\ChunkedFileWriterTests.cs" />
     <Compile Include="Serialisation\SerialiserTests.cs" />
+    <Compile Include="SqlServerDatabaseEqualityComparerTests.cs" />
     <Compile Include="SqlServerExportModelBuilderTests.cs" />
     <Compile Include="SqlServerImportModelBuilderTests.cs" />
   </ItemGroup>
