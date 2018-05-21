@@ -57,8 +57,10 @@
     <Compile Include="Serialisation\ReservedFieldTests.cs" />
     <Compile Include="Serialisation\ChunkedFileWriterTests.cs" />
     <Compile Include="Serialisation\SerialiserTests.cs" />
+    <Compile Include="IntegrationTesting\SimpleTestTable.cs" />
     <Compile Include="SqlServerDatabaseEqualityComparerTests.cs" />
     <Compile Include="SqlServerExportModelBuilderTests.cs" />
+    <Compile Include="SqlServerImportExportTests.cs" />
     <Compile Include="SqlServerImportModelBuilderTests.cs" />
   </ItemGroup>
   <ItemGroup>

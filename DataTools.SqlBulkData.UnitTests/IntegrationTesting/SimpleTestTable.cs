@@ -1,0 +1,97 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Linq;
+using DataTools.SqlBulkData.Schema;
+
+namespace DataTools.SqlBulkData.UnitTests.IntegrationTesting
+{
+    /// <summary>
+    /// Simple table containing an identity primary key and two columns of a specified type,
+    /// one of which is nullable.
+    /// </summary>
+    public class SimpleTestTable : IDisposable
+    {
+        private readonly SqlServerDatabase database;
+        private readonly string name;
+        private readonly string dbType;
+        private bool isCreated = false;
+
+        public SimpleTestTable(SqlServerDatabase database, string dbType)
+        {
+            this.database = database;
+            this.name = $"test_table_{Guid.NewGuid():N}";
+            this.dbType = dbType;
+        }
+
+        public void Create()
+        {
+            var sql = $@"create table {Sql.Escape(name)}(
+    id int identity primary key not null,
+    column_notnull {dbType} not null,
+    column_null {dbType} null
+)";
+            using (var cn = database.OpenConnection())
+            using (var cmd = Sql.CreateQuery(cn, sql))
+            {
+                cmd.ExecuteNonQuery();
+            }
+            isCreated = true;
+        }
+
+        public void AddRow(object value, object nullableValue)
+        {
+            if (value == null || value == DBNull.Value) throw new ArgumentNullException(nameof(value));
+            if (!isCreated) throw new InvalidOperationException("Table has not yet been created.");
+
+            var sql = $"insert into {Sql.Escape(name)}(column_notnull, column_null) values (@value_notnull, @value_null)";
+            using (var cn = database.OpenConnection())
+            using (var cmd = Sql.CreateQuery(cn, sql))
+            {
+                cmd.Parameters.Add(new SqlParameter("value_notnull", value));
+                cmd.Parameters.Add(new SqlParameter("value_null", nullableValue ?? DBNull.Value));
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public object[][] ReadRows()
+        {
+            if (!isCreated) throw new InvalidOperationException("Table has not yet been created.");
+            var sql = $"select column_notnull, column_null from {Sql.Escape(name)}";
+            using (var cn = database.OpenConnection())
+            using (var cmd = Sql.CreateQuery(cn, sql))
+            using (var reader = cmd.ExecuteReader())
+            {
+                var rows = new List<object[]>();
+                while (reader.Read())
+                {
+                    rows.Add(new [] {
+                        reader.GetValue(0),
+                        reader.IsDBNull(1) ? null : reader.GetValue(1)
+                    });
+                }
+                return rows.ToArray();
+            }
+        }
+
+        public Table ReadSchema()
+        {
+            return new GetAllTablesQuery().List(database).Single(t => t.Name == name);
+        }
+
+        public void Dispose()
+        {
+            if (!isCreated) return;
+            try
+            {
+                using (var cn = database.OpenConnection())
+                using (var cmd = Sql.CreateQuery(cn, $"drop table {Sql.Escape(name)}"))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+                isCreated = false;
+            }
+            catch { }
+        }
+    }
+}
