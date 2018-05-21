@@ -91,9 +91,15 @@ namespace DataTools.SqlBulkData
 
                 case SqlDbType.UniqueIdentifier:
                 case SqlDbType.Bit:
+                    break;
 
                 case SqlDbType.Float:
+                    if (field.DataType.MaxLength <= 0) break; 
+                    if (field.DataType.MaxLength <= 4) return new SqlServerSinglePrecisionColumn() { Name = field.Name, Flags = field.IsNullable ? ColumnFlags.Nullable : ColumnFlags.None };
+                    if (field.DataType.MaxLength <= 8) return new SqlServerDoublePrecisionColumn() { Name = field.Name, Flags = field.IsNullable ? ColumnFlags.Nullable : ColumnFlags.None };
+                    break;
                 case SqlDbType.Real:
+                    return new SqlServerSinglePrecisionColumn() { Name = field.Name, Flags = field.IsNullable ? ColumnFlags.Nullable : ColumnFlags.None };
                 case SqlDbType.VarBinary:
                 case SqlDbType.Binary:
                 case SqlDbType.Image:

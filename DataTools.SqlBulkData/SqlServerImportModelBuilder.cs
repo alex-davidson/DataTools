@@ -73,6 +73,9 @@ namespace DataTools.SqlBulkData
                     if (descriptor.Length == 1) return new SqlServerTinyIntColumn { Flags = descriptor.ColumnFlags, Name = descriptor.OriginalName };
                     throw new NotSupportedException("SQL Server does not support unsigned integers longer than a byte.");
                 case ColumnDataType.FloatingPoint:
+                    if (descriptor.Length <= 0) break; 
+                    if (descriptor.Length <= 4) return new SqlServerSinglePrecisionColumn() { Flags = descriptor.ColumnFlags, Name = descriptor.OriginalName };
+                    if (descriptor.Length <= 8) return new SqlServerDoublePrecisionColumn() { Flags = descriptor.ColumnFlags, Name = descriptor.OriginalName };
                     break;
                 case ColumnDataType.String:
                     return new SqlServerVariableLengthStringColumn { Flags = descriptor.ColumnFlags, Name = descriptor.OriginalName };

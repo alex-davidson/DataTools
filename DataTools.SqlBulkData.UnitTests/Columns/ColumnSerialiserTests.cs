@@ -18,6 +18,8 @@ namespace DataTools.SqlBulkData.UnitTests.Columns
             new Case<string> { Column = f => new SqlServerVariableLengthStringColumn { Flags = f }, TestValue = "ASCII string" },
             new Case<string> { Column = f => new SqlServerFixedLengthANSIStringColumn(12) { Flags = f }, TestValue = "ASCII string" },
             new Case<string> { Column = f => new SqlServerVariableLengthStringColumn { Flags = f }, TestValue = "Ṳṅḯḉоɖέ string" },
+            new Case<float> { Column = f => new SqlServerSinglePrecisionColumn { Flags = f }, TestValue = (float)Math.E },
+            new Case<double> { Column = f => new SqlServerDoublePrecisionColumn { Flags = f }, TestValue = Math.PI },
         };
 
         [Test]
