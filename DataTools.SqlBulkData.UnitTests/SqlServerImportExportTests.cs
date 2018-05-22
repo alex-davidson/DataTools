@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -62,7 +63,7 @@ namespace DataTools.SqlBulkData.UnitTests
         {
             var database = TestDatabase.LocalTempDb.Get();
 
-            using (var source = new SimpleTestTable(database, testCase.Source.DbType))
+            using (var source = new SimpleTestTable(database, testCase.Source.DbType, testCase.Source.SqlDbType))
             using (var writer = new BulkTableFileWriter(firstExportStream, true))
             {
                 // Create source table, populate some rows, then export to firstExportStream.
@@ -76,7 +77,7 @@ namespace DataTools.SqlBulkData.UnitTests
 
             firstExportStream.Position = 0;
 
-            using (var target = new SimpleTestTable(database, testCase.Target.DbType))
+            using (var target = new SimpleTestTable(database, testCase.Target.DbType, testCase.Target.SqlDbType))
             {
                 // Create target table, then import from firstExportStream.
                 using (var reader = new BulkTableFileReader(firstExportStream, true))
@@ -88,7 +89,7 @@ namespace DataTools.SqlBulkData.UnitTests
                     Assume.That(reader.MoveNext(), Is.False);
                 }
 
-                Assert.That(target.ReadRows(), Is.EqualTo(new [] {
+                Assert.That(target.ReadRows(testCase.Target.DotNetType), Is.EqualTo(new [] {
                     new [] { testCase.Target.Value, null },
                     new [] { testCase.Target.Value, testCase.Target.Value }
                 }));
@@ -132,6 +133,7 @@ namespace DataTools.SqlBulkData.UnitTests
         public interface IField
         {
             string DbType { get; }
+            SqlDbType? SqlDbType { get; }
             Type DotNetType { get; }
             object Value { get; }
         }
@@ -145,6 +147,7 @@ namespace DataTools.SqlBulkData.UnitTests
             }
 
             public string DbType { get; }
+            public SqlDbType? SqlDbType { get; set; }
             public Type DotNetType => typeof(T);
             public object Value { get; }
 

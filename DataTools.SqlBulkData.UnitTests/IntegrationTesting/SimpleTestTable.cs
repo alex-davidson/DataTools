@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using DataTools.SqlBulkData.Schema;
@@ -16,12 +17,14 @@ namespace DataTools.SqlBulkData.UnitTests.IntegrationTesting
         private readonly string name;
         private readonly string dbType;
         private bool isCreated = false;
+        private SqlDbType? sqlDbType;
 
-        public SimpleTestTable(SqlServerDatabase database, string dbType)
+        public SimpleTestTable(SqlServerDatabase database, string dbType, SqlDbType? sqlDbType = null)
         {
             this.database = database;
             this.name = $"test_table_{Guid.NewGuid():N}";
             this.dbType = dbType;
+            this.sqlDbType = sqlDbType;
         }
 
         public void Create()
@@ -48,13 +51,21 @@ namespace DataTools.SqlBulkData.UnitTests.IntegrationTesting
             using (var cn = database.OpenConnection())
             using (var cmd = Sql.CreateQuery(cn, sql))
             {
-                cmd.Parameters.Add(new SqlParameter("value_notnull", value));
-                cmd.Parameters.Add(new SqlParameter("value_null", nullableValue ?? DBNull.Value));
+                cmd.Parameters.Add(CreateParameter("value_notnull", value));
+                cmd.Parameters.Add(CreateParameter("value_null", nullableValue ?? DBNull.Value));
                 cmd.ExecuteNonQuery();
             }
         }
 
-        public object[][] ReadRows()
+        private SqlParameter CreateParameter(string paramName, object paramValue)
+        {
+            if (paramValue == null) throw new ArgumentNullException(nameof(paramValue));
+            var parameter = new SqlParameter(paramName, paramValue);
+            if (sqlDbType != null) parameter.SqlDbType = sqlDbType.Value;
+            return parameter;
+        }
+
+        public object[][] ReadRows(Type expectedType)
         {
             if (!isCreated) throw new InvalidOperationException("Table has not yet been created.");
             var sql = $"select column_notnull, column_null from {Sql.Escape(name)}";
@@ -66,12 +77,25 @@ namespace DataTools.SqlBulkData.UnitTests.IntegrationTesting
                 while (reader.Read())
                 {
                     rows.Add(new [] {
-                        reader.GetValue(0),
-                        reader.IsDBNull(1) ? null : reader.GetValue(1)
+                        ReadField(reader, 0, expectedType),
+                        ReadField(reader, 1, expectedType)
                     });
                 }
                 return rows.ToArray();
             }
+        }
+
+        private static object ReadField(IDataReader record, int ordinal, Type expectedType)
+        {
+            if (record.IsDBNull(ordinal)) return null;
+            var value = record.GetValue(ordinal);
+            if (expectedType.IsInstanceOfType(value)) return value;
+            if (record is SqlDataReader sqlReader)
+            {
+                var sqlValue = sqlReader.GetSqlValue(ordinal);
+                if (expectedType.IsInstanceOfType(sqlValue)) return sqlValue;
+            }
+            return value;
         }
 
         public Table ReadSchema()
