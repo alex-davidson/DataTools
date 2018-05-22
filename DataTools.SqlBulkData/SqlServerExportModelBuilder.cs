@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using DataTools.SqlBulkData.Columns;
 using DataTools.SqlBulkData.PersistedModel;
@@ -104,11 +105,17 @@ namespace DataTools.SqlBulkData
                     break;
                 case SqlDbType.Real:
                     return new SqlServerSinglePrecisionColumn() { Name = field.Name, Flags = field.IsNullable ? ColumnFlags.Nullable : ColumnFlags.None };
-                case SqlDbType.VarBinary:
+
                 case SqlDbType.Binary:
+                    return new SqlServerFixedLengthBytesColumn(field.DataType.MaxLength) { Name = field.Name, Flags = field.IsNullable ? ColumnFlags.AbsentWhenNull : ColumnFlags.None };
+
+                case SqlDbType.VarBinary:
                 case SqlDbType.Image:
+                    return new SqlServerVariableLengthBytesColumn() { Name = field.Name, Flags = field.IsNullable ? ColumnFlags.AbsentWhenNull : ColumnFlags.None };
+
                 case SqlDbType.Timestamp:
-                    break;
+                    Debug.Assert(field.DataType.MaxLength == 8);
+                    return new SqlServerFixedLengthBytesColumn(field.DataType.MaxLength) { Name = field.Name, Flags = field.IsNullable ? ColumnFlags.AbsentWhenNull : ColumnFlags.None };
 
                 case SqlDbType.Decimal:
                     return new SqlServerDecimalColumn(DecimalPacker.ForDigitCount(field.DataType.Precision)) { Name = field.Name, Flags = field.IsNullable ? ColumnFlags.Nullable : ColumnFlags.None };

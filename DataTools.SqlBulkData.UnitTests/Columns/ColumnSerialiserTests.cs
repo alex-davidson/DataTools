@@ -23,6 +23,8 @@ namespace DataTools.SqlBulkData.UnitTests.Columns
             new Case<double> { Column = f => new SqlServerDoublePrecisionColumn { Flags = f }, TestValue = Math.PI },
             new Case<decimal> { Column = f => new SqlServerDecimalColumn(DecimalPacker.ForBufferSize(16)) { Flags = f }, TestValue = new decimal(Math.PI) },
             new Case<Guid> { Column = f => new SqlServerUniqueIdentifierColumn { Flags = f }, TestValue = Guid.NewGuid() },
+            new Case<byte[]> { Column = f => new SqlServerFixedLengthBytesColumn(5) { Flags = f }, TestValue = new byte[] { 0x03, 0x3F, 0x94, 0xF3, 0x92 } },
+            new Case<byte[]> { Column = f => new SqlServerVariableLengthBytesColumn { Flags = f }, TestValue = new byte[] { 0x03, 0x3F, 0x94, 0xF3, 0x92 } },
         };
 
         [Test]

@@ -81,7 +81,8 @@ namespace DataTools.SqlBulkData
                 case ColumnDataType.String:
                     return new SqlServerVariableLengthStringColumn { Flags = descriptor.ColumnFlags, Name = descriptor.OriginalName };
                 case ColumnDataType.VariableLengthBytes:
-                    break;
+                    return new SqlServerVariableLengthBytesColumn() { Flags = descriptor.ColumnFlags, Name = descriptor.OriginalName };
+
                 case ColumnDataType.FixedLengthString:
                     return new SqlServerFixedLengthANSIStringColumn(descriptor.Length) { Flags = descriptor.ColumnFlags, Name = descriptor.OriginalName };
 
@@ -92,6 +93,8 @@ namespace DataTools.SqlBulkData
                     return new SqlServerUniqueIdentifierColumn { Flags = descriptor.ColumnFlags, Name = descriptor.OriginalName };
 
                 case ColumnDataType.FixedLengthBytes:
+                    return new SqlServerFixedLengthBytesColumn(descriptor.Length) { Flags = descriptor.ColumnFlags, Name = descriptor.OriginalName };
+
                 case ColumnDataType.Invalid:
                 default:
                     throw new ArgumentOutOfRangeException();
