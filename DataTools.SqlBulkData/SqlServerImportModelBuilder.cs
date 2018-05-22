@@ -5,6 +5,7 @@ using System.Linq;
 using DataTools.SqlBulkData.Columns;
 using DataTools.SqlBulkData.PersistedModel;
 using DataTools.SqlBulkData.Schema;
+using DataTools.SqlBulkData.Serialisation;
 
 namespace DataTools.SqlBulkData
 {
@@ -83,6 +84,9 @@ namespace DataTools.SqlBulkData
                     break;
                 case ColumnDataType.FixedLengthString:
                     return new SqlServerFixedLengthANSIStringColumn(descriptor.Length) { Flags = descriptor.ColumnFlags, Name = descriptor.OriginalName };
+
+                case ColumnDataType.DecimalFloatingPoint:
+                    return new SqlServerDecimalColumn(DecimalPacker.ForBufferSize(descriptor.Length)) { Flags = descriptor.ColumnFlags, Name = descriptor.OriginalName };
 
                 case ColumnDataType.FixedLengthBytes:
                 case ColumnDataType.Invalid:

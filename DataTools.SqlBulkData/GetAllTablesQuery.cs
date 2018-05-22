@@ -19,6 +19,7 @@ select
     C.name as column_name,
     C.is_computed as column_is_computed,
     C.is_nullable as column_is_nullable,
+    C.precision as column_precision,
     C.max_length as column_max_length,
     D.name as column_data_type
 from sys.tables T
@@ -46,6 +47,7 @@ order by T.name, C.column_id
                                 DataType = new Table.DataType {
                                     Name = r.column_data_type,
                                     SqlDbType = new SqlDbTypeInterpreter().Interpret(r.column_data_type),
+                                    Precision = r.column_precision,
                                     MaxLength = r.column_max_length
                                 }
                             })
@@ -69,6 +71,7 @@ order by T.name, C.column_id
                         column_name =  Get<string>("column_name"),
                         column_is_computed = Get<bool>("column_is_computed"),
                         column_is_nullable = Get<bool>("column_is_nullable"),
+                        column_precision = Get<int>("column_precision"),
                         column_max_length = Get<int>("column_max_length"),
                         column_data_type = Get<string>("column_data_type")
                     };
@@ -84,6 +87,7 @@ order by T.name, C.column_id
             public string column_name { get; set; }
             public bool column_is_computed { get; set; }
             public bool column_is_nullable { get; set; }
+            public int column_precision { get; set; }
             public int column_max_length { get; set; }
             public string column_data_type { get; set; }
         }

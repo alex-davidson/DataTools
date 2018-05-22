@@ -90,11 +90,7 @@ namespace DataTools.SqlBulkData.UnitTests.IntegrationTesting
             if (record.IsDBNull(ordinal)) return null;
             var value = record.GetValue(ordinal);
             if (expectedType.IsInstanceOfType(value)) return value;
-            if (record is SqlDataReader sqlReader)
-            {
-                var sqlValue = sqlReader.GetSqlValue(ordinal);
-                if (expectedType.IsInstanceOfType(sqlValue)) return sqlValue;
-            }
+            // Maybe convert, or look for SQL Server types?
             return value;
         }
 

@@ -66,6 +66,10 @@ Subtypes:
 * Guid: Consists of four fields: UInt32, UInt16, UInt16, byte[8]. The first
   three are multibyte primitives stored in little-endian format. The last is
   a raw byte array and is stored as such. Should be 8-byte-aligned.
+* DecimalFloatingPoint: Represented as n-1 bytes of twos-complement integer
+  significand, followed by a single twos-complement exponent byte. Should be
+  4-byte aligned and the total length must always be a multiple of 4. The
+  value may be calculated as: `significand * 10^exponent`
 
 #### Variable-length
 
@@ -145,6 +149,8 @@ Table B: Stored data types
     5   VariableLengthBytes     A variable-length sequence of bytes. The column's Length indicates the maximum number of bytes.
     6   FixedLengthString       A sequence of ASCII characters, one byte per character, the count of which is indicated by the column's Length.
     7   FixedLengthBytes        A sequence of bytes, the count of which is indicated by the column's Length.
+    8   DecimalFloatingPoint    A twos-complement multibyte integer in little-endian order, followed by a single scale byte. The column's Length
+                                indicates the total number of bytes, and it must always be multiple of 4.
 
 ### Row Data Chunk: ROWD
 

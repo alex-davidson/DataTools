@@ -33,6 +33,11 @@ namespace DataTools.SqlBulkData.PersistedModel
         /// A sequence of bytes, the count of which is indicated by the column's Length.
         /// </summary>
         FixedLengthBytes = 7,
+        /// <summary>
+        /// A twos-complement multibyte integer in little-endian order, followed by a single scale byte. The column's Length
+        /// indicates the total number of bytes, and it must always be multiple of 4.
+        /// </summary>
+        DecimalFloatingPoint = 8,
     }
 
     public static class ColumnDataTypeExtensions
@@ -44,6 +49,7 @@ namespace DataTools.SqlBulkData.PersistedModel
                 case ColumnDataType.SignedInteger:
                 case ColumnDataType.UnsignedInteger:
                 case ColumnDataType.FloatingPoint:
+                case ColumnDataType.DecimalFloatingPoint:
                     return ColumnDataTypeClassification.FixedLengthPrimitive;
 
                 case ColumnDataType.FixedLengthString:

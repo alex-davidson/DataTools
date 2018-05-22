@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlTypes;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -27,6 +28,9 @@ namespace DataTools.SqlBulkData.UnitTests
             new Case(new Field<float>("real", (float)Math.E)),
             new Case(new Field<float>("float(24)", (float)Math.E)),
             new Case(new Field<double>("float(53)", Math.PI)),
+            new Case(new Field<decimal>("decimal(38, 14)", SqlDecimal.ConvertToPrecScale(new SqlDecimal(Math.PI), 38, 14).Value)),
+            new Case(new Field<decimal>("money", 26872929752907.2978m)),
+            new Case(new Field<decimal>("smallmoney", 2907.2978m)),
         };
 
         public static Case[] CompatibleColumnTypeCases = {
@@ -41,6 +45,9 @@ namespace DataTools.SqlBulkData.UnitTests
             new Case(new Field<float>("real", (float)Math.E)) { Target = new Field<double>("float(53)", (float)Math.E) },
             new Case(new Field<float>("float(24)", (float)Math.E)) { Target = new Field<float>("real", (float)Math.E) },
             new Case(new Field<double>("float(53)", Math.PI)) { Target = new Field<string>("varchar(max)", Math.PI.ToString()) },
+            new Case(new Field<decimal>("decimal(38, 16)", SqlDecimal.ConvertToPrecScale(new SqlDecimal(Math.PI), 38, 16).Value)) { Target = new Field<string>("varchar(max)", new SqlDecimal(Math.PI).Value.ToString()) },
+            new Case(new Field<decimal>("decimal(38, 14)", 26872929752907.2978m)) { Target = new Field<decimal>("money", 26872929752907.2978m) },
+            new Case(new Field<decimal>("money", 26872929752907.2978m)) { Target = new Field<decimal>("decimal(20, 4)", 26872929752907.2978m) },
         };
 
         [TestCaseSource(nameof(SimpleCases))]

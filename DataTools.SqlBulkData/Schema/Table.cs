@@ -23,6 +23,7 @@ namespace DataTools.SqlBulkData.Schema
         {
             public string Name { get; set; }
             public SqlDbType SqlDbType { get; set; }
+            public int Precision { get; set; }
             public int MaxLength { get; set; }
         }
 

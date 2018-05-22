@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using DataTools.SqlBulkData.Columns;
 using DataTools.SqlBulkData.PersistedModel;
+using DataTools.SqlBulkData.Serialisation;
 using NUnit.Framework;
 
 namespace DataTools.SqlBulkData.UnitTests.Columns
@@ -20,6 +21,7 @@ namespace DataTools.SqlBulkData.UnitTests.Columns
             new Case<string> { Column = f => new SqlServerVariableLengthStringColumn { Flags = f }, TestValue = "Ṳṅḯḉоɖέ string" },
             new Case<float> { Column = f => new SqlServerSinglePrecisionColumn { Flags = f }, TestValue = (float)Math.E },
             new Case<double> { Column = f => new SqlServerDoublePrecisionColumn { Flags = f }, TestValue = Math.PI },
+            new Case<decimal> { Column = f => new SqlServerDecimalColumn(DecimalPacker.ForBufferSize(16)) { Flags = f }, TestValue = new decimal(Math.PI) },
         };
 
         [Test]

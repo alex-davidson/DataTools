@@ -22,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -31,6 +32,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>DataTools.SqlBulkData.Program</StartupObject>
@@ -57,6 +59,7 @@
     <Compile Include="BulkRowWriter.cs" />
     <Compile Include="CancelKeyMonitor.cs" />
     <Compile Include="CheckConstraintsStatement.cs" />
+    <Compile Include="Columns\SqlServerDecimalColumn.cs" />
     <Compile Include="Columns\SqlServerDoublePrecisionColumn.cs" />
     <Compile Include="Columns\SqlServerSinglePrecisionColumn.cs" />
     <Compile Include="DisableConstraintsStatement.cs" />
@@ -65,6 +68,8 @@
     <Compile Include="BulkTableFileReader.cs" />
     <Compile Include="BulkTableFileWriter.cs" />
     <Compile Include="ColumnSerialiserValidator.cs" />
+    <Compile Include="Serialisation\BufferUtils.cs" />
+    <Compile Include="Serialisation\DecimalPacker.cs" />
     <Compile Include="PersistedModel\TableIdentifier.cs" />
     <Compile Include="ColumnMetaInfo.cs" />
     <Compile Include="Columns\IColumnDefinition.cs" />

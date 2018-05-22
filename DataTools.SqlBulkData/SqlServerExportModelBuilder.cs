@@ -5,6 +5,7 @@ using System.Linq;
 using DataTools.SqlBulkData.Columns;
 using DataTools.SqlBulkData.PersistedModel;
 using DataTools.SqlBulkData.Schema;
+using DataTools.SqlBulkData.Serialisation;
 
 namespace DataTools.SqlBulkData
 {
@@ -104,10 +105,15 @@ namespace DataTools.SqlBulkData
                 case SqlDbType.Binary:
                 case SqlDbType.Image:
                 case SqlDbType.Timestamp:
+                    break;
 
                 case SqlDbType.Decimal:
+                    return new SqlServerDecimalColumn(DecimalPacker.ForDigitCount(field.DataType.Precision)) { Name = field.Name, Flags = field.IsNullable ? ColumnFlags.Nullable : ColumnFlags.None };
+
                 case SqlDbType.Money:
+                    return new SqlServerDecimalColumn(DecimalPacker.ForBufferSize(12)) { Name = field.Name, Flags = field.IsNullable ? ColumnFlags.AbsentWhenNull : ColumnFlags.None };
                 case SqlDbType.SmallMoney:
+                    return new SqlServerDecimalColumn(DecimalPacker.ForBufferSize(8)) { Name = field.Name, Flags = field.IsNullable ? ColumnFlags.AbsentWhenNull : ColumnFlags.None };
 
                 case SqlDbType.Date:
                 case SqlDbType.Time:
