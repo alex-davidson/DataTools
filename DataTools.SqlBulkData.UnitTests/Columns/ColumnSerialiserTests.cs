@@ -22,6 +22,7 @@ namespace DataTools.SqlBulkData.UnitTests.Columns
             new Case<float> { Column = f => new SqlServerSinglePrecisionColumn { Flags = f }, TestValue = (float)Math.E },
             new Case<double> { Column = f => new SqlServerDoublePrecisionColumn { Flags = f }, TestValue = Math.PI },
             new Case<decimal> { Column = f => new SqlServerDecimalColumn(DecimalPacker.ForBufferSize(16)) { Flags = f }, TestValue = new decimal(Math.PI) },
+            new Case<Guid> { Column = f => new SqlServerUniqueIdentifierColumn { Flags = f }, TestValue = Guid.NewGuid() },
         };
 
         [Test]

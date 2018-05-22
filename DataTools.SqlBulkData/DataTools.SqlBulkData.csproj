@@ -62,6 +62,7 @@
     <Compile Include="Columns\SqlServerDecimalColumn.cs" />
     <Compile Include="Columns\SqlServerDoublePrecisionColumn.cs" />
     <Compile Include="Columns\SqlServerSinglePrecisionColumn.cs" />
+    <Compile Include="Columns\SqlServerUniqueIdentifierColumn.cs" />
     <Compile Include="DisableConstraintsStatement.cs" />
     <Compile Include="EnableConstraintsStatement.cs" />
     <Compile Include="LoggingVerbosity.cs" />

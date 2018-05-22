@@ -38,6 +38,10 @@ namespace DataTools.SqlBulkData.PersistedModel
         /// indicates the total number of bytes, and it must always be multiple of 4.
         /// </summary>
         DecimalFloatingPoint = 8,
+        /// <summary>
+        /// A 16-byte Guid stored as little-endian UInt32, UInt16, UInt16, byte[8]. Should be 8-byte-aligned.
+        /// </summary>
+        Guid = 9,
     }
 
     public static class ColumnDataTypeExtensions
@@ -50,6 +54,7 @@ namespace DataTools.SqlBulkData.PersistedModel
                 case ColumnDataType.UnsignedInteger:
                 case ColumnDataType.FloatingPoint:
                 case ColumnDataType.DecimalFloatingPoint:
+                case ColumnDataType.Guid:
                     return ColumnDataTypeClassification.FixedLengthPrimitive;
 
                 case ColumnDataType.FixedLengthString:

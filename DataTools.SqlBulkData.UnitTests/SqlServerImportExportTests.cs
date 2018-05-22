@@ -31,6 +31,7 @@ namespace DataTools.SqlBulkData.UnitTests
             new Case(new Field<decimal>("decimal(38, 14)", SqlDecimal.ConvertToPrecScale(new SqlDecimal(Math.PI), 38, 14).Value)),
             new Case(new Field<decimal>("money", 26872929752907.2978m)),
             new Case(new Field<decimal>("smallmoney", 2907.2978m)),
+            new Case(new Field<Guid>("uniqueidentifier", Guid.NewGuid())),
         };
 
         public static Case[] CompatibleColumnTypeCases = {
@@ -48,6 +49,7 @@ namespace DataTools.SqlBulkData.UnitTests
             new Case(new Field<decimal>("decimal(38, 16)", SqlDecimal.ConvertToPrecScale(new SqlDecimal(Math.PI), 38, 16).Value)) { Target = new Field<string>("varchar(max)", new SqlDecimal(Math.PI).Value.ToString()) },
             new Case(new Field<decimal>("decimal(38, 14)", 26872929752907.2978m)) { Target = new Field<decimal>("money", 26872929752907.2978m) },
             new Case(new Field<decimal>("money", 26872929752907.2978m)) { Target = new Field<decimal>("decimal(20, 4)", 26872929752907.2978m) },
+            new Case(new Field<Guid>("uniqueidentifier", new Guid("00112233-4455-6677-8899-AABBCCDDEEFF"))) { Target = new Field<string>("varchar(max)", "00112233-4455-6677-8899-aabbccddeeff") },
         };
 
         [TestCaseSource(nameof(SimpleCases))]

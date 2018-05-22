@@ -151,6 +151,7 @@ Table B: Stored data types
     7   FixedLengthBytes        A sequence of bytes, the count of which is indicated by the column's Length.
     8   DecimalFloatingPoint    A twos-complement multibyte integer in little-endian order, followed by a single scale byte. The column's Length
                                 indicates the total number of bytes, and it must always be multiple of 4.
+    9   Guid                    A 16-byte Guid stored as little-endian UInt32, UInt16, UInt16, byte[8]. Should be 8-byte-aligned.
 
 ### Row Data Chunk: ROWD
 

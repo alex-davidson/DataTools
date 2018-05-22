@@ -89,8 +89,11 @@ namespace DataTools.SqlBulkData
                     return new SqlServerVariableLengthStringColumn() { Name = field.Name, Flags = field.IsNullable ? ColumnFlags.AbsentWhenNull : ColumnFlags.None };
 
                 case SqlDbType.Xml:
+                    break;
 
                 case SqlDbType.UniqueIdentifier:
+                    return new SqlServerUniqueIdentifierColumn() { Name = field.Name, Flags = field.IsNullable ? ColumnFlags.AbsentWhenNull : ColumnFlags.None };
+
                 case SqlDbType.Bit:
                     break;
 

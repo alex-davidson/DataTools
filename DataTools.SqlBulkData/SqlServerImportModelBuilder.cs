@@ -88,6 +88,9 @@ namespace DataTools.SqlBulkData
                 case ColumnDataType.DecimalFloatingPoint:
                     return new SqlServerDecimalColumn(DecimalPacker.ForBufferSize(descriptor.Length)) { Flags = descriptor.ColumnFlags, Name = descriptor.OriginalName };
 
+                case ColumnDataType.Guid:
+                    return new SqlServerUniqueIdentifierColumn { Flags = descriptor.ColumnFlags, Name = descriptor.OriginalName };
+
                 case ColumnDataType.FixedLengthBytes:
                 case ColumnDataType.Invalid:
                 default:
