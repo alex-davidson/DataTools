@@ -35,6 +35,7 @@ namespace DataTools.SqlBulkData.UnitTests
             new Case(new Field<byte[]>("binary(5)", new byte[] { 0x03, 0x3F, 0x94, 0xF3, 0x92 }) { SqlDbType = SqlDbType.Binary } ),
             new Case(new Field<byte[]>("varbinary(12)", new byte[] { 0x03, 0x3F, 0x94, 0xF3, 0x92 }) { SqlDbType = SqlDbType.Binary } ),
             new Case(new Field<byte[]>("image", new byte[] { 0x03, 0x3F, 0x94, 0xF3, 0x92 }) { SqlDbType = SqlDbType.Binary } ),
+            new Case(new Field<string>("xml", "<doc>Test</doc>")),
         };
 
         public static Case[] CompatibleColumnTypeCases = {
@@ -54,6 +55,8 @@ namespace DataTools.SqlBulkData.UnitTests
             new Case(new Field<decimal>("money", 26872929752907.2978m)) { Target = new Field<decimal>("decimal(20, 4)", 26872929752907.2978m) },
             new Case(new Field<Guid>("uniqueidentifier", new Guid("00112233-4455-6677-8899-AABBCCDDEEFF"))) { Target = new Field<string>("varchar(max)", "00112233-4455-6677-8899-aabbccddeeff") },
             new Case(new Field<byte[]>("image", new byte[] { 0x03, 0x3F, 0x94, 0xF3, 0x92 }) { SqlDbType = SqlDbType.Binary }) { Target = new Field<byte[]>("binary(6)", new byte[] { 0x03, 0x3F, 0x94, 0xF3, 0x92, 0x00 }) { SqlDbType = SqlDbType.Binary } },
+            new Case(new Field<string>("xml", "<doc>Test</doc>")) { Target = new Field<string>("nvarchar(256)", "<doc>Test</doc>") },
+            new Case(new Field<string>("nvarchar(256)", "<doc>Test</doc>")) { Target = new Field<string>("xml", "<doc>Test</doc>") },
         };
 
         [TestCaseSource(nameof(SimpleCases))]
