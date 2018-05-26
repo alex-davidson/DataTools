@@ -59,10 +59,13 @@
     <Compile Include="BulkRowWriter.cs" />
     <Compile Include="CancelKeyMonitor.cs" />
     <Compile Include="CheckConstraintsStatement.cs" />
+    <Compile Include="Columns\SqlServerDateTimeColumn.cs" />
+    <Compile Include="Columns\SqlServerDateTimeOffsetColumn.cs" />
     <Compile Include="Columns\SqlServerDecimalColumn.cs" />
     <Compile Include="Columns\SqlServerDoublePrecisionColumn.cs" />
     <Compile Include="Columns\SqlServerFixedLengthBytesColumn.cs" />
     <Compile Include="Columns\SqlServerSinglePrecisionColumn.cs" />
+    <Compile Include="Columns\SqlServerTimeColumn.cs" />
     <Compile Include="Columns\SqlServerUniqueIdentifierColumn.cs" />
     <Compile Include="Columns\SqlServerVariableLengthBytesColumn.cs" />
     <Compile Include="DisableConstraintsStatement.cs" />

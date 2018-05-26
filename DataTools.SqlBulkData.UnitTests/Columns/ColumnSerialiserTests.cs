@@ -25,6 +25,9 @@ namespace DataTools.SqlBulkData.UnitTests.Columns
             new Case<Guid> { Column = f => new SqlServerUniqueIdentifierColumn { Flags = f }, TestValue = Guid.NewGuid() },
             new Case<byte[]> { Column = f => new SqlServerFixedLengthBytesColumn(5) { Flags = f }, TestValue = new byte[] { 0x03, 0x3F, 0x94, 0xF3, 0x92 } },
             new Case<byte[]> { Column = f => new SqlServerVariableLengthBytesColumn { Flags = f }, TestValue = new byte[] { 0x03, 0x3F, 0x94, 0xF3, 0x92 } },
+            new Case<TimeSpan> { Column = f => new SqlServerTimeColumn { Flags = f }, TestValue = new TimeSpan(-5, 04, 59, 23, 192) },
+            new Case<DateTime> { Column = f => new SqlServerDateTimeColumn { Flags = f }, TestValue = new DateTime(2016, 05, 26, 18, 49, 13, 750, DateTimeKind.Utc) },
+            new Case<DateTimeOffset> { Column = f => new SqlServerDateTimeOffsetColumn { Flags = f }, TestValue = new DateTimeOffset(new DateTime(2016, 05, 26, 18, 49, 13, 750), TimeSpan.FromHours(-7)) },
         };
 
         [Test]

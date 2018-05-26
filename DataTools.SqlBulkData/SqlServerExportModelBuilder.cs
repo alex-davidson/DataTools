@@ -125,12 +125,15 @@ namespace DataTools.SqlBulkData
                 case SqlDbType.SmallMoney:
                     return new SqlServerDecimalColumn(DecimalPacker.ForBufferSize(8)) { Name = field.Name, Flags = field.IsNullable ? ColumnFlags.AbsentWhenNull : ColumnFlags.None };
 
-                case SqlDbType.Date:
                 case SqlDbType.Time:
+                    return new SqlServerTimeColumn() { Name = field.Name, Flags = field.IsNullable ? ColumnFlags.AbsentWhenNull : ColumnFlags.None };
+                case SqlDbType.Date:
                 case SqlDbType.DateTime:
                 case SqlDbType.DateTime2:
                 case SqlDbType.SmallDateTime:
+                    return new SqlServerDateTimeColumn() { Name = field.Name, Flags = field.IsNullable ? ColumnFlags.AbsentWhenNull : ColumnFlags.None };
                 case SqlDbType.DateTimeOffset:
+                    return new SqlServerDateTimeOffsetColumn() { Name = field.Name, Flags = field.IsNullable ? ColumnFlags.AbsentWhenNull : ColumnFlags.None };
 
                 case SqlDbType.Variant:
                 case SqlDbType.Udt:

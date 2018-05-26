@@ -36,6 +36,12 @@ namespace DataTools.SqlBulkData.UnitTests
             new Case(new Field<byte[]>("varbinary(12)", new byte[] { 0x03, 0x3F, 0x94, 0xF3, 0x92 }) { SqlDbType = SqlDbType.Binary } ),
             new Case(new Field<byte[]>("image", new byte[] { 0x03, 0x3F, 0x94, 0xF3, 0x92 }) { SqlDbType = SqlDbType.Binary } ),
             new Case(new Field<string>("xml", "<doc>Test</doc>")),
+            new Case(new Field<DateTime>("datetime", new DateTime(2016, 05, 26, 18, 49, 13, 750, DateTimeKind.Utc))),
+            new Case(new Field<DateTime>("datetime2", new DateTime(2016, 05, 26, 18, 49, 13, 750, DateTimeKind.Utc))),
+            new Case(new Field<DateTime>("smalldatetime", new DateTime(2016, 05, 26, 18, 49, 00, DateTimeKind.Utc))),
+            new Case(new Field<DateTime>("date", new DateTime(2016, 05, 26))),
+            new Case(new Field<TimeSpan>("time", new TimeSpan(0, 18, 49, 13, 750))),
+            new Case(new Field<DateTimeOffset>("datetimeoffset", new DateTimeOffset(new DateTime(2016, 05, 26, 18, 49, 13, 750), TimeSpan.FromHours(-7)))),
         };
 
         public static Case[] CompatibleColumnTypeCases = {
@@ -57,6 +63,9 @@ namespace DataTools.SqlBulkData.UnitTests
             new Case(new Field<byte[]>("image", new byte[] { 0x03, 0x3F, 0x94, 0xF3, 0x92 }) { SqlDbType = SqlDbType.Binary }) { Target = new Field<byte[]>("binary(6)", new byte[] { 0x03, 0x3F, 0x94, 0xF3, 0x92, 0x00 }) { SqlDbType = SqlDbType.Binary } },
             new Case(new Field<string>("xml", "<doc>Test</doc>")) { Target = new Field<string>("nvarchar(256)", "<doc>Test</doc>") },
             new Case(new Field<string>("nvarchar(256)", "<doc>Test</doc>")) { Target = new Field<string>("xml", "<doc>Test</doc>") },
+            new Case(new Field<DateTime>("datetime", new DateTime(2016, 05, 26, 18, 49, 13, 750, DateTimeKind.Utc))) { Target = new Field<DateTime>("datetime2", new DateTime(2016, 05, 26, 18, 49, 13, 750, DateTimeKind.Utc)) },
+            new Case(new Field<DateTime>("datetime2", new DateTime(2016, 05, 26, 18, 49, 13, 750, DateTimeKind.Utc))) { Target = new Field<DateTime>("date", new DateTime(2016, 05, 26)) },
+            new Case(new Field<DateTime>("date", new DateTime(2016, 05, 26))) { Target = new Field<DateTime>("datetime2", new DateTime(2016, 05, 26)) },
         };
 
         [TestCaseSource(nameof(SimpleCases))]

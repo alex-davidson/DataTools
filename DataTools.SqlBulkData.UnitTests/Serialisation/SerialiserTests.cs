@@ -150,6 +150,30 @@ namespace DataTools.SqlBulkData.UnitTests.Serialisation
         }
 
         [Test]
+        public void RoundTripsDateTime()
+        {
+            var dateTime = new DateTime(2018, 05, 26, 17, 50, 33, 120, DateTimeKind.Utc);
+            var stream = new MemoryStream();
+            Serialiser.WriteDateTime(stream, dateTime);
+            stream.Position = 0;
+
+            Assert.That(Serialiser.ReadDateTime(stream), Is.EqualTo(dateTime));
+            Assert.That(stream.ToArray(), Is.EqualTo(new byte[] { 0x00, 0x8A, 0xC0, 0x2D, 0x31, 0xC3, 0xD5, 0x48 }));
+        }
+
+        [Test]
+        public void RoundTripsDateTimeOffset()
+        {
+            var dateTimeOffset = new DateTimeOffset(2018, 05, 26, 17, 50, 33, 120, TimeSpan.FromHours(-5));
+            var stream = new MemoryStream();
+            Serialiser.WriteDateTimeOffset(stream, dateTimeOffset);
+            stream.Position = 0;
+
+            Assert.That(Serialiser.ReadDateTimeOffset(stream), Is.EqualTo(dateTimeOffset));
+            Assert.That(stream.ToArray(), Is.EqualTo(new byte[] { 0x00, 0x8A, 0xC0, 0x2D, 0x31, 0xC3, 0xD5, 0x08, 0xD4, 0xFE, 0xFF, 0xFF }));
+        }
+
+        [Test]
         public void AlignReadDoesNotModifyAlreadyAlignedPosition()
         {
             var stream = new MemoryStream(new byte[8]);

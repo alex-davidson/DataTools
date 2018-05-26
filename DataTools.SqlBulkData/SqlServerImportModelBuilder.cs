@@ -95,6 +95,15 @@ namespace DataTools.SqlBulkData
                 case ColumnDataType.FixedLengthBytes:
                     return new SqlServerFixedLengthBytesColumn(descriptor.Length) { Flags = descriptor.ColumnFlags, Name = descriptor.OriginalName };
 
+                case ColumnDataType.Time:
+                    return new SqlServerTimeColumn { Flags = descriptor.ColumnFlags, Name = descriptor.OriginalName };
+
+                case ColumnDataType.DateTime:
+                    return new SqlServerDateTimeColumn { Flags = descriptor.ColumnFlags, Name = descriptor.OriginalName };
+
+                case ColumnDataType.DateTimeOffset:
+                    return new SqlServerDateTimeOffsetColumn { Flags = descriptor.ColumnFlags, Name = descriptor.OriginalName };
+
                 case ColumnDataType.Invalid:
                 default:
                     throw new ArgumentOutOfRangeException();

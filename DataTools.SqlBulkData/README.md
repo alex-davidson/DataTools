@@ -152,6 +152,21 @@ Table B: Stored data types
     8   DecimalFloatingPoint    A twos-complement multibyte integer in little-endian order, followed by a single scale byte. The column's Length
                                 indicates the total number of bytes, and it must always be multiple of 4.
     9   Guid                    A 16-byte Guid stored as little-endian UInt32, UInt16, UInt16, byte[8]. Should be 8-byte-aligned.
+   10   Time                    A little-endian Int64 value, representing a signed count of 100-nanosecond ticks.
+   11   DateTime                A little-endian UInt64 value. The lower 62 bits are a count of 100-nanosecond ticks that have elapsed since
+                                12:00:00 midnight at the start of January 1, 0001 (Gregorian). The type of DateTime is indicated by the top two
+                                bits, as described in Table C.
+   12   DateTimeOffset          A 12-byte field consisting of an 8-byte DateTime (see above) with Unspecified type, followed by a 4-byte timezone
+                                offset, stored as a little-endian Int32 count of minutes.
+
+
+Table C: DateTime Kind
+
+    0x00...                     Unspecified/Unknown
+    0x40... Bit 62              UTC
+    0x80... Bit 63              Local time
+    0xC0... Both                Reserved. Do not use.
+
 
 ### Row Data Chunk: ROWD
 

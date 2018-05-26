@@ -61,6 +61,21 @@ namespace DataTools.SqlBulkData.Serialisation
 
         public static bool IsEndOfStream(Stream stream) => stream.Position >= stream.Length;
 
+        public static DateTime ReadDateTime(Stream stream) => DateTime.FromBinary(ReadInt64(stream));
+        public static void WriteDateTime(Stream stream, DateTime value) => WriteInt64(stream, value.ToBinary());
+
+        public static DateTimeOffset ReadDateTimeOffset(Stream stream)
+        {
+            var dateTime = ReadDateTime(stream);
+            var offsetMinutes = ReadInt32(stream);
+            return new DateTimeOffset(dateTime, TimeSpan.FromMinutes(offsetMinutes));
+        }
+        public static void WriteDateTimeOffset(Stream stream, DateTimeOffset value)
+        {
+            WriteDateTime(stream, value.DateTime);
+            WriteInt32(stream, (int)value.Offset.TotalMinutes);
+        }
+
         public static Guid ReadGuid(Stream stream) => new Guid(ReadFixedLengthBytesInternal(stream, 16, 8));
         public static void WriteGuid(Stream stream, Guid value) => WriteFixedLengthBytesInternal(stream, value.ToByteArray(), 8);
 
