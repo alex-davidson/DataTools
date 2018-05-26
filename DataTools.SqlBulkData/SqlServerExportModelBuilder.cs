@@ -96,7 +96,7 @@ namespace DataTools.SqlBulkData
                     return new SqlServerUniqueIdentifierColumn() { Name = field.Name, Flags = field.IsNullable ? ColumnFlags.AbsentWhenNull : ColumnFlags.None };
 
                 case SqlDbType.Bit:
-                    break;
+                    return new SqlServerBitColumn() { Name = field.Name, Flags = field.IsNullable ? ColumnFlags.AbsentWhenNull : ColumnFlags.None };
 
                 case SqlDbType.Float:
                     if (field.DataType.MaxLength <= 0) break; 

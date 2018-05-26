@@ -16,6 +16,7 @@ namespace DataTools.SqlBulkData.UnitTests.Columns
             new Case<int> { Column = f => new SqlServerIntColumn { Flags = f }, TestValue = -42 },
             new Case<short> { Column = f => new SqlServerSmallIntColumn { Flags = f }, TestValue = -42 },
             new Case<byte> { Column = f => new SqlServerTinyIntColumn { Flags = f }, TestValue = 42 },
+            new Case<bool> { Column = f => new SqlServerBitColumn { Flags = f }, TestValue = true },
             new Case<string> { Column = f => new SqlServerVariableLengthStringColumn { Flags = f }, TestValue = "ASCII string" },
             new Case<string> { Column = f => new SqlServerFixedLengthANSIStringColumn(12) { Flags = f }, TestValue = "ASCII string" },
             new Case<string> { Column = f => new SqlServerVariableLengthStringColumn { Flags = f }, TestValue = "Ṳṅḯḉоɖέ string" },

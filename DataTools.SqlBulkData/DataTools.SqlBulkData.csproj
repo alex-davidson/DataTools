@@ -59,6 +59,7 @@
     <Compile Include="BulkRowWriter.cs" />
     <Compile Include="CancelKeyMonitor.cs" />
     <Compile Include="CheckConstraintsStatement.cs" />
+    <Compile Include="Columns\SqlServerBitColumn.cs" />
     <Compile Include="Columns\SqlServerDateTimeColumn.cs" />
     <Compile Include="Columns\SqlServerDateTimeOffsetColumn.cs" />
     <Compile Include="Columns\SqlServerDecimalColumn.cs" />
