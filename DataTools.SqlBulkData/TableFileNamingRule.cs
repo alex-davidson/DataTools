@@ -21,7 +21,14 @@ namespace DataTools.SqlBulkData
             return Directory.GetFiles(path).Where(IsTableFilePath).ToArray();
         }
 
-        private bool IsTableFilePath(string filePath) => StringComparer.OrdinalIgnoreCase.Equals(Path.GetExtension(filePath), NormaliseExtension(Extension));
+        public bool IsTableFilePath(string filePath)
+        {
+            if (StringComparer.OrdinalIgnoreCase.Equals(Path.GetExtension(filePath), NormaliseExtension("gz")))
+            {
+                filePath = Path.ChangeExtension(filePath, "")?.TrimEnd('.');
+            }
+            return StringComparer.OrdinalIgnoreCase.Equals(Path.GetExtension(filePath), NormaliseExtension(Extension));
+        }
 
         private static string NormaliseExtension(string extension)
         {

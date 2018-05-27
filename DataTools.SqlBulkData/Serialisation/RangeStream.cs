@@ -3,6 +3,12 @@ using System.IO;
 
 namespace DataTools.SqlBulkData.Serialisation
 {
+    /// <summary>
+    /// Exposes a section of a stream as a new read-only stream.
+    /// </summary>
+    /// <remarks>
+    /// Note that reads and seeks will change the position of the underlying stream.
+    /// </remarks>
     public class RangeStream  : Stream
     {
         private Stream stream;
@@ -24,9 +30,14 @@ namespace DataTools.SqlBulkData.Serialisation
             if (startPosition < 0) throw new ArgumentOutOfRangeException(nameof(startPosition), "Offset cannot be negative.");
             if (length < 0) throw new ArgumentOutOfRangeException(nameof(length), "Length cannot be negative.");
 
+            // Unseekable streams will generally throw when we try to get Position, but if
+            // this is one of our wrapper position-tracking classes it will work fine:
             var position = stream.Position - startPosition;
             if (position < 0) throw new InvalidOperationException("Range starts after current position in the underlying stream.");
-            if (startPosition + length > stream.Length) throw new ArgumentOutOfRangeException(nameof(length), "Range extends beyond the end of the underlying stream.");
+            if (stream.CanSeek)
+            {
+                if (startPosition + length > stream.Length) throw new ArgumentOutOfRangeException(nameof(length), "Range extends beyond the end of the underlying stream.");
+            }
         }
 
         public override bool CanRead => stream.CanRead;

@@ -4,30 +4,26 @@ using System.IO;
 namespace DataTools.SqlBulkData
 {
     /// <summary>
-    /// Caches length and position for fast alignment checks.
+    /// Wrapper for reading an unseekable stream for which the initial position is known.
     /// </summary>
-    class FastReadOnlyStream : Stream
+    class PositionTrackingReadOnlyStream : Stream
     {
         private readonly Stream underlying;
         private long position;
+        private readonly bool leaveOpen;
 
-        public FastReadOnlyStream(Stream underlying)
+        public PositionTrackingReadOnlyStream(Stream underlying, long position, bool leaveOpen)
         {
             if (!underlying.CanRead) throw new ArgumentException("Not a readable stream.", nameof(underlying));
-            if (!underlying.CanSeek) throw new ArgumentException("Not a seekable stream.", nameof(underlying));
+            if (underlying.CanSeek) throw new ArgumentException("Overriding position and length of seekable streams is not allowed.", nameof(underlying));
             this.underlying = underlying;
-            Length = underlying.Length;
-            position = underlying.Position;
+            this.position = position;
+            this.leaveOpen = leaveOpen;
         }
 
         public override void Flush() => underlying.Flush();
 
-        public override long Seek(long offset, SeekOrigin origin)
-        {
-            position = underlying.Seek(offset, origin);
-            return position;
-        }
-
+        public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException("Unseekable stream.");
         public override void SetLength(long value) => throw new NotSupportedException("Read-only stream.");
 
         public override int Read(byte[] buffer, int offset, int count)
@@ -40,23 +36,19 @@ namespace DataTools.SqlBulkData
         public override void Write(byte[] buffer, int offset, int count) => throw new NotSupportedException("Read-only stream.");
 
         public override bool CanRead => true;
-        public override bool CanSeek => underlying.CanSeek;
+        public override bool CanSeek => false;
         public override bool CanWrite => false;
-        public override long Length { get; }
+        public override long Length => throw new NotSupportedException("Unseekable stream.");
 
         public override long Position
         {
             get => position;
-            set
-            {
-                underlying.Position = value;
-                position = value;
-            }
+            set => throw new NotSupportedException("Unseekable stream.");
         }
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing) underlying.Dispose();
+            if (disposing && !leaveOpen) underlying.Dispose();
             base.Dispose(disposing);
         }
     }

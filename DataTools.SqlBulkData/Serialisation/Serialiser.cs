@@ -16,9 +16,40 @@ namespace DataTools.SqlBulkData.Serialisation
         private static readonly ThreadLocal<byte[]> sharedBuffer = new ThreadLocal<byte[]>(() => new byte[BufferSize]);
         private static readonly byte[] readAlignBuffer = new byte[MaximumAlignment];
         private static readonly byte[] writeAlignBuffer = new byte[MaximumAlignment];
+        private static readonly byte[] largeSeekBuffer = new byte[4 * 1024 * 1024];
 
         public static bool IsAligned(Stream s, int alignment) => s.Position % alignment == 0;
-        
+
+        /// <summary>
+        /// Seek forwards to the specified position. Use reads instead if the stream does
+        /// not support seeking.
+        /// </summary>
+        public static void SeekReadForwards(Stream stream, long position)
+        {
+            if (stream.CanSeek)
+            {
+                stream.Seek(position, SeekOrigin.Begin);
+                return;
+            }
+            // Unseekable streams will generally throw when we try to get Position, but if
+            // this is one of our wrapper position-tracking classes it will work fine:
+            var adjustment = stream.Position - position;
+            if (adjustment < 0) throw new NotSupportedException("Specified position is before current position.");
+            if (!SeekReadForwardsInternal(stream, largeSeekBuffer, adjustment)) throw new EndOfStreamException();
+        }
+
+        private static bool SeekReadForwardsInternal(Stream stream, byte[] scratchBuffer, long distance)
+        {
+            while (distance > scratchBuffer.Length)
+            {
+                var count = stream.Read(scratchBuffer, 0, scratchBuffer.Length);
+                if (count <= 0) return false;
+                distance -= count;
+            }
+            var lastCount = stream.Read(scratchBuffer, 0, (int)distance);
+            return lastCount == distance;
+        }
+
         /// <summary>
         /// Seek forwards as necessary to align the next read as specified.
         /// Throws EndOfStreamException if the seek would go beyond the end of the stream.
@@ -37,13 +68,8 @@ namespace DataTools.SqlBulkData.Serialisation
         {
             if (!stream.CanRead) throw new NotSupportedException("Stream is not readable.");
             var adjustment = GetAlignmentAdjustment(stream, alignment);
-            if (adjustment == 0) return true;
-            if (stream.Position + adjustment > stream.Length) return false;
-
             Debug.Assert(adjustment <= MaximumAlignment);
-            var count = stream.Read(readAlignBuffer, 0, adjustment);
-            Debug.Assert(count == adjustment);
-            return true;
+            return SeekReadForwardsInternal(stream, readAlignBuffer, adjustment);
         }
 
         /// <summary>

@@ -64,6 +64,7 @@
     <Compile Include="SqlServerExportModelBuilderTests.cs" />
     <Compile Include="SqlServerImportExportTests.cs" />
     <Compile Include="SqlServerImportModelBuilderTests.cs" />
+    <Compile Include="TableFileNamingRuleTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

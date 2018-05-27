@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using DataTools.SqlBulkData.PersistedModel;
 using DataTools.SqlBulkData.Serialisation;
 
@@ -20,8 +21,33 @@ namespace DataTools.SqlBulkData
         public BulkTableFileReader(Stream stream, bool leaveOpen = false)
         {
             if (stream == null) throw new ArgumentNullException(nameof(stream));
-            this.stream = new FastReadOnlyStream(stream);
+            this.stream = PrepareReadOnlyStream(stream, leaveOpen);
             this.leaveOpen = leaveOpen;
+        }
+
+        /// <summary>
+        /// Wrap the provided stream as necessary to track its position, which is required for
+        /// eg. alignment checks. If the stream has a GZip header, unwrap it automatically.
+        /// </summary>
+        /// <remarks>
+        /// For unseekable streams we have to assume we're starting at position 0. If the
+        /// starting position is not 8-byte-aligned, neither can any reads.
+        /// </remarks>
+        private static Stream PrepareReadOnlyStream(Stream stream, bool leaveOpen)
+        {
+            if (!stream.CanSeek) return new PositionTrackingReadOnlyStream(stream, 0, leaveOpen);
+
+            var position = stream.Position;
+            var first = stream.ReadByte();
+            var second = stream.ReadByte();
+            stream.Position = position;
+
+            if (first == 0x1f && second == 0x8b)    // GZip header.
+            {
+                var decompressed = new GZipStream(stream, CompressionMode.Decompress, leaveOpen);
+                return new PositionTrackingReadOnlyStream(decompressed, 0, leaveOpen);
+            }
+            return new FastReadOnlyStream(stream);
         }
 
         private void EnsureReader()

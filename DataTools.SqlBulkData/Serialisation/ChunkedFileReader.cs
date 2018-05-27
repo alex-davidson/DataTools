@@ -51,7 +51,7 @@ namespace DataTools.SqlBulkData.Serialisation
             // If we have a current chunk, seek to the end.
             if (current != null)
             {
-                stream.Seek(current.Header.EndOffset, SeekOrigin.Begin);
+                Serialiser.SeekReadForwards(stream, current.Header.EndOffset);
                 if (!Serialiser.TryAlignRead(stream, 8)) return false;
             }
             if (!TryReadChunkHeader(out var header)) return false;
@@ -63,7 +63,7 @@ namespace DataTools.SqlBulkData.Serialisation
         {
             var chunkDataStart = header.StartOffset + HeaderSizeBytes;
             Debug.Assert(stream.Position == chunkDataStart);
-            var newChunkReader = new ChunkReader(header, new RangeStream(stream, chunkDataStart, header.Length));;
+            var newChunkReader = new ChunkReader(header, new RangeStream(stream, chunkDataStart, header.Length));
             current?.Invalidate();
             current = newChunkReader;
         }
@@ -75,14 +75,25 @@ namespace DataTools.SqlBulkData.Serialisation
             if (!Serialiser.IsAligned(stream, 8)) throw new InvalidOperationException("A chunk header cannot begin at this position because it is not 8-byte-aligned.");
             header = new ChunkHeader();
 
-            var remainingBytes = stream.Length - stream.Position;
-            if (remainingBytes < HeaderSizeBytes) return false;
+            if (stream.CanSeek)
+            {
+                var remainingBytes = stream.Length - stream.Position;
+                if (remainingBytes < HeaderSizeBytes) return false;
+            }
 
             header.StartOffset = stream.Position;
-            header.TypeId = Serialiser.ReadUInt32(stream);
-            Serialiser.ReadUInt32(stream);
-            header.Length = Serialiser.ReadInt64(stream);
-            header.EndOffset = stream.Position + header.Length;
+            try
+            {
+                header.TypeId = Serialiser.ReadUInt32(stream);
+                Serialiser.ReadUInt32(stream);
+                header.Length = Serialiser.ReadInt64(stream);
+                header.EndOffset = stream.Position + header.Length;
+            }
+            catch (EndOfStreamException)
+            {
+                if (stream.Position == header.StartOffset) return false;
+                throw;
+            }
             if (header.Length < 0) throw new InvalidOperationException("Chunk length is invalid. Not a real chunk?");
             return true;
         }
