@@ -14,6 +14,13 @@ namespace DataTools.SqlBulkData
             return cmd;
         }
 
+        public static IDbCommand CreateQuery(IDbConnection cn, string query, TimeSpan timeout)
+        {
+            var cmd = CreateQuery(cn, query);
+            cmd.CommandTimeout = (int)timeout.TotalSeconds;
+            return cmd;
+        }
+
         public static string Escape(params string[] symbols)
         {
             var result = String.Join(".", symbols.Where(s => !String.IsNullOrEmpty(s)).Select(EscapeSingle));

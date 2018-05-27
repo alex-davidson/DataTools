@@ -14,6 +14,7 @@ namespace DataTools.SqlBulkData
 
         public string Name => connectionString.InitialCatalog;
         public string Server => connectionString.DataSource;
+        public TimeSpan DefaultTimeout { get; set; } = TimeSpan.FromHours(8);
 
         public override string ToString() => $"{Name} on {Server}";
 

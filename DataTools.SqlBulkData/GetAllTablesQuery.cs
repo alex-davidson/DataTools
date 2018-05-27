@@ -29,7 +29,7 @@ left join sys.systypes D on D.xtype = C.system_type_id and D.xusertype = C.user_
 order by T.name, C.column_id
 ";
             using (var cn = database.OpenConnection())
-            using (var cmd = Sql.CreateQuery(cn, sql))
+            using (var cmd = Sql.CreateQuery(cn, sql, database.DefaultTimeout))
             using (var reader = cmd.ExecuteReader())
             {
                 var rows = GetAllTablesRow.ReadAll(reader);

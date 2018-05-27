@@ -41,7 +41,7 @@ namespace DataTools.SqlBulkData
                         {
                             cmd.ExecuteNonQuery();
                         }
-                        using (var cmd = Sql.CreateQuery(cn, sql))
+                        using (var cmd = Sql.CreateQuery(cn, sql, database.DefaultTimeout))
                         {
                             cmd.ExecuteNonQuery();
                         }

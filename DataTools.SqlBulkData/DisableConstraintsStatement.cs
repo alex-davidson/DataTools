@@ -7,7 +7,7 @@ namespace DataTools.SqlBulkData
         public void Execute(SqlServerDatabase database, Table table)
         {
             using (var cn = database.OpenConnection())
-            using (var cmd = Sql.CreateQuery(cn, $"alter table {Sql.Escape(table.Schema, table.Name)} nocheck constraint all"))
+            using (var cmd = Sql.CreateQuery(cn, $"alter table {Sql.Escape(table.Schema, table.Name)} nocheck constraint all", database.DefaultTimeout))
             {
                 cmd.ExecuteNonQuery();
             }

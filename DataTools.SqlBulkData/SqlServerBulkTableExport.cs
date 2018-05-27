@@ -9,7 +9,6 @@ namespace DataTools.SqlBulkData
     public class SqlServerBulkTableExport
     {
         private readonly SqlServerDatabase database;
-        public TimeSpan Timeout { get; set; } = TimeSpan.FromHours(8);
 
         public SqlServerBulkTableExport(SqlServerDatabase database)
         {
@@ -19,9 +18,8 @@ namespace DataTools.SqlBulkData
         public Task Execute(ExportModel model, BulkTableFileWriter fileWriter, CancellationToken token)
         {
             using (var cn = database.OpenConnection())
-            using (var cmd = Sql.CreateQuery(cn, BuildSelectStatement(model)))
+            using (var cmd = Sql.CreateQuery(cn, BuildSelectStatement(model), database.DefaultTimeout))
             {
-                cmd.CommandTimeout = (int)Timeout.TotalSeconds;
                 using (var reader = cmd.ExecuteReader())
                 {
                     token.ThrowIfCancellationRequested();

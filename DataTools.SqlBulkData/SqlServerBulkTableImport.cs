@@ -10,7 +10,6 @@ namespace DataTools.SqlBulkData
     {
         private readonly SqlServerDatabase database;
         public SqlServerImportModelBuilder ModelBuilder { get; set; } = new SqlServerImportModelBuilder();
-        public TimeSpan Timeout { get; set; } = TimeSpan.FromHours(8);
 
         public SqlServerBulkTableImport(SqlServerDatabase database)
         {
@@ -35,7 +34,7 @@ namespace DataTools.SqlBulkData
         private void PrepareSqlBulkCopy(SqlBulkCopy bulkCopy, ImportModel model)
         {
             bulkCopy.EnableStreaming = true;
-            bulkCopy.BulkCopyTimeout = (int)Timeout.TotalSeconds;
+            bulkCopy.BulkCopyTimeout = (int)database.DefaultTimeout.TotalSeconds;
             bulkCopy.DestinationTableName = Sql.Escape(model.Table.Schema, model.Table.Name);
             bulkCopy.ColumnMappings.Clear();
             foreach (var field in model.ColumnMetaInfos)

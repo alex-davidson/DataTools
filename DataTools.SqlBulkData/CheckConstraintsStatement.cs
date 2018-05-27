@@ -5,7 +5,7 @@
         public void Execute(SqlServerDatabase database)
         {
             using (var cn = database.OpenConnection())
-            using (var cmd = Sql.CreateQuery(cn, "dbcc checkconstraints with all_constraints;"))
+            using (var cmd = Sql.CreateQuery(cn, "dbcc checkconstraints with all_constraints;", database.DefaultTimeout))
             using (var reader = cmd.ExecuteReader())
             {
                 var count = 0;
