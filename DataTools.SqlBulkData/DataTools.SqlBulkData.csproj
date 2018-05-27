@@ -71,6 +71,7 @@
     <Compile Include="Columns\SqlServerVariableLengthBytesColumn.cs" />
     <Compile Include="DisableConstraintsStatement.cs" />
     <Compile Include="EnableConstraintsStatement.cs" />
+    <Compile Include="FastReadOnlyStream.cs" />
     <Compile Include="LoggingVerbosity.cs" />
     <Compile Include="BulkTableFileReader.cs" />
     <Compile Include="BulkTableFileWriter.cs" />

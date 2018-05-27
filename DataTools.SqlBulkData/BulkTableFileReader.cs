@@ -19,7 +19,8 @@ namespace DataTools.SqlBulkData
 
         public BulkTableFileReader(Stream stream, bool leaveOpen = false)
         {
-            this.stream = stream ?? throw new ArgumentNullException(nameof(stream));
+            if (stream == null) throw new ArgumentNullException(nameof(stream));
+            this.stream = new FastReadOnlyStream(stream);
             this.leaveOpen = leaveOpen;
         }
 

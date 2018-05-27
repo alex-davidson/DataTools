@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -47,6 +48,8 @@ namespace DataTools.SqlBulkData
                 if (token.IsCancellationRequested) return;
 
                 var tasks = files
+                    // Simple heuristic for better parallelisation: start with large files.
+                    .OrderByDescending(f => new FileInfo(f).Length)
                     .Select(f => Task.Run(() => ImportFromFile(f), token))
                     .ToArray();
 
