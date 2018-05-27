@@ -1,5 +1,6 @@
 ﻿using System.Data.SqlClient;
 using System.Threading;
+using System.Threading.Tasks;
 using DataTools.SqlBulkData.Schema;
 using log4net;
 
@@ -9,27 +10,27 @@ namespace DataTools.SqlBulkData
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(TruncateTableStatement));
 
-        public void Execute(SqlServerDatabase database, Table table)
+        public async Task ExecuteAsync(SqlServerDatabase database, Table table, CancellationToken token = default(CancellationToken))
         {
             try
             {
-                ExecuteWithRetryDeadlocks(database,  $"truncate table {Sql.Escape(table.Schema, table.Name)}");
+                await ExecuteWithRetryDeadlocks(database,  $"truncate table {Sql.Escape(table.Schema, table.Name)}", token);
             }
             catch (SqlException ex) when (ex.Number == 0x1268)
             {
                 // Table is referenced by a foreign key.
                 // Fall back to using `delete from`.
-                ExecuteWithRetryDeadlocks(database, $"delete from {Sql.Escape(table.Schema, table.Name)}");
+                await ExecuteWithRetryDeadlocks(database, $"delete from {Sql.Escape(table.Schema, table.Name)}", token);
             }
             catch (SqlException ex) when (ex.Number == 0x0e91)
             {
                 // Table is referenced by a schema-bound object, possibly an indexed view.
                 // Fall back to using `delete from`.
-                ExecuteWithRetryDeadlocks(database, $"delete from {Sql.Escape(table.Schema, table.Name)}");
+                await ExecuteWithRetryDeadlocks(database, $"delete from {Sql.Escape(table.Schema, table.Name)}", token);
             }
         }
 
-        private static void ExecuteWithRetryDeadlocks(SqlServerDatabase database, string sql)
+        private static async Task ExecuteWithRetryDeadlocks(SqlServerDatabase database, string sql, CancellationToken token)
         {
             while (true)
             {
@@ -43,7 +44,7 @@ namespace DataTools.SqlBulkData
                         }
                         using (var cmd = Sql.CreateQuery(cn, sql, database.DefaultTimeout))
                         {
-                            cmd.ExecuteNonQuery();
+                            await cmd.ExecuteNonQueryAsync(token);
                         }
                     }
                     return;

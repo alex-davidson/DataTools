@@ -1,20 +1,21 @@
 ﻿using System;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 
 namespace DataTools.SqlBulkData
 {
     public static class Sql
     {
-        public static IDbCommand CreateQuery(IDbConnection cn, string query)
+        public static DbCommand CreateQuery(IDbConnection cn, string query)
         {
-            var cmd = cn.CreateCommand();
+            var cmd = (DbCommand)cn.CreateCommand();
             cmd.CommandText = query;
             cmd.CommandType = CommandType.Text;
             return cmd;
         }
 
-        public static IDbCommand CreateQuery(IDbConnection cn, string query, TimeSpan timeout)
+        public static DbCommand CreateQuery(IDbConnection cn, string query, TimeSpan timeout)
         {
             var cmd = CreateQuery(cn, query);
             cmd.CommandTimeout = (int)timeout.TotalSeconds;

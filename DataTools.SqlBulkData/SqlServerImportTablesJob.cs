@@ -40,7 +40,7 @@ namespace DataTools.SqlBulkData
             var tableLookup = tables.ToLookup(t => t.Identify());
 
             var disabledConstraintTables = new List<Table>();
-            var clearedTables = new HashSet<TableIdentifier>();
+            var clearedTables = new Dictionary<TableIdentifier, Task>();
             try
             {
                 DisableAllConstraints(sqlServerDatabase, tables, disabledConstraintTables);
@@ -65,18 +65,18 @@ namespace DataTools.SqlBulkData
             }
             log.Info("Constraints are restored and verified.");
 
-            void MaybeTruncateTable(Table table)
+            Task MaybeTruncateTable(Table table)
             {
-                if (!TruncateTableBeforeImport) return;
-                lock (table)
+                if (!TruncateTableBeforeImport) return Task.CompletedTask;
+                lock (clearedTables)
                 {
-                    lock (clearedTables)
-                    {
-                        if (!clearedTables.Add(table.Identify())) return;
-                    }
-
-                    log.Info($"Clearing table: {table}");
-                    new TruncateTableStatement().Execute(sqlServerDatabase, table);
+                    if (clearedTables.TryGetValue(table.Identify(), out var task)) return task;
+                    var newTask = Task.Run(() => {
+                        log.Info($"Clearing table: {table}");
+                        return new TruncateTableStatement().ExecuteAsync(sqlServerDatabase, table, token);
+                    }, token);
+                    clearedTables.Add(table.Identify(), newTask);
+                    return newTask;
                 }
             }
 
@@ -106,7 +106,7 @@ namespace DataTools.SqlBulkData
                             log.Info($"Starting: {filePath} -> {model.Table.Name}");
                             try
                             {
-                                MaybeTruncateTable(targetTable);
+                                await MaybeTruncateTable(targetTable);
                                 await bulkImporter.Execute(model, fileReader.Current.DataStream, token);
                                 lease.Dispose();
                                 log.Info($"Finished: {filePath} -> {model.Table.Name}");
