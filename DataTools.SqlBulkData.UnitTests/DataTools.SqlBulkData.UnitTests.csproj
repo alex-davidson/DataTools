@@ -48,6 +48,7 @@
     <Compile Include="BulkRowReaderWriterTests.cs" />
     <Compile Include="BulkTableFileReaderWriterTests.cs" />
     <Compile Include="Columns\ColumnSerialiserTests.cs" />
+    <Compile Include="ForeignKeyStatementTests.cs" />
     <Compile Include="Serialisation\BufferUtilsTests.cs" />
     <Compile Include="Serialisation\DecimalPackerTests.cs" />
     <Compile Include="GetAllTablesQueryTests.cs" />
@@ -65,6 +66,7 @@
     <Compile Include="SqlServerImportExportTests.cs" />
     <Compile Include="SqlServerImportModelBuilderTests.cs" />
     <Compile Include="TableFileNamingRuleTests.cs" />
+    <Compile Include="IntegrationTesting\TemporaryTables.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

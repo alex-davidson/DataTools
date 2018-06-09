@@ -22,6 +22,15 @@ namespace DataTools.SqlBulkData
             return cmd;
         }
 
+        public static string Statement(params string[] parts) => String.Join(" ", parts.Where(s => !String.IsNullOrEmpty(s)));
+
+        public static string EscapeColumnList(params string[] columns)
+        {
+            var result = String.Join(", ", columns.Where(s => !String.IsNullOrEmpty(s)).Select(EscapeSingle));
+            if (result.Length == 0) throw new ArgumentException("No columns specified.", nameof(columns));
+            return result;
+        }
+
         public static string Escape(params string[] symbols)
         {
             var result = String.Join(".", symbols.Where(s => !String.IsNullOrEmpty(s)).Select(EscapeSingle));
