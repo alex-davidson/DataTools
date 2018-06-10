@@ -1,11 +1,13 @@
 ﻿# Changelog
 
-## 1.0, latest
+## 1.1 (latest)
 
-First useful version.
+Fixes import failures due to deadlocks, caused by indexed views upon on the
+tables being imported.
 
-* Supports the majority of SQL Server data types.
-* Supports GZip compression for import and export.
+* Indexed views will have all indexes disabled for the duration of the import
+  and rebuilt afterwards.
+* Inserts are performed in batches of 10000 rows, with table locks.
 
 ### Known Limitations
 
@@ -17,3 +19,10 @@ First useful version.
   so particularly large field values (~1GB) might fail to export.
 * The tool tries to use all the CPUs on the machine. There is no command-line
   option to control this.
+
+## 1.0
+
+First useful version.
+
+* Supports the majority of SQL Server data types.
+* Supports GZip compression for import and export.
