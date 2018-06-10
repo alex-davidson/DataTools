@@ -1,4 +1,4 @@
-﻿# SQL Server Version-Agnostic Bulk Import/Export Tool, v1
+﻿# SQL Server Version-Agnostic Bulk Import/Export Tool, v1.1
 
 Copies bulk data between files and SQL Server databases.
 
@@ -52,8 +52,8 @@ any existing data.
 * There is no option to append to tables at present. They will always be
   overwritten.
 * If an import fails halfway through, the database will likely be left with a
-  lot of untrusted constraints and half-empty tables. Don't casually use this 
-  on a production database!
+  lot of untrusted constraints, half-empty tables, and disabled indexes on
+  views. Don't casually use this on a production database!
 * User-defined SQL Server data types are not supported. Nor are Variant types.
   The export process will bail out quickly if it encounters any of these.
 * The file format specifies 'segmented' buffer types in excess of 2GB. These

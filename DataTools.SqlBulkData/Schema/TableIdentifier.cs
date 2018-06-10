@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DataTools.SqlBulkData.PersistedModel
+namespace DataTools.SqlBulkData.Schema
 {
     public struct TableIdentifier : IEquatable<TableIdentifier>
     {
@@ -31,7 +31,7 @@ namespace DataTools.SqlBulkData.PersistedModel
         {
             unchecked
             {
-                return ((Name != null ? StringComparer.OrdinalIgnoreCase.GetHashCode(Name) : 0) * 397) ^ (Schema != null ? StringComparer.OrdinalIgnoreCase.GetHashCode(Schema) : 0);
+                return ((Name != null ? SqlServerSymbolComparer.Instance.GetHashCode(Name) : 0) * 397) ^ (Schema != null ? SqlServerSymbolComparer.Instance.GetHashCode(Schema) : 0);
             }
         }
     }

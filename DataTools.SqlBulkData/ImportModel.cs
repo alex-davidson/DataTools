@@ -1,5 +1,6 @@
 ﻿using DataTools.SqlBulkData.Columns;
 using DataTools.SqlBulkData.PersistedModel;
+using DataTools.SqlBulkData.Schema;
 
 namespace DataTools.SqlBulkData
 {

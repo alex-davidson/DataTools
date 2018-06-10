@@ -48,6 +48,7 @@
     <Compile Include="BulkRowReaderWriterTests.cs" />
     <Compile Include="BulkTableFileReaderWriterTests.cs" />
     <Compile Include="Columns\ColumnSerialiserTests.cs" />
+    <Compile Include="GetAllIndexesOnViewsQueryTests.cs" />
     <Compile Include="Serialisation\BufferUtilsTests.cs" />
     <Compile Include="Serialisation\DecimalPackerTests.cs" />
     <Compile Include="GetAllTablesQueryTests.cs" />

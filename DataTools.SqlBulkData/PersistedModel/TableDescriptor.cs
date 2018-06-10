@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DataTools.SqlBulkData.Schema;
 
 namespace DataTools.SqlBulkData.PersistedModel
 {

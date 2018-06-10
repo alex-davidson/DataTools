@@ -19,7 +19,7 @@ namespace DataTools.SqlBulkData
         public async Task Execute(ImportModel model, Stream bulkDataStream, CancellationToken token)
         {
             using (var cn = database.OpenConnection())
-            using (var bulkCopy = new SqlBulkCopy(cn, SqlBulkCopyOptions.KeepIdentity | SqlBulkCopyOptions.KeepNulls | SqlBulkCopyOptions.UseInternalTransaction, null))
+            using (var bulkCopy = new SqlBulkCopy(cn, SqlBulkCopyOptions.KeepIdentity | SqlBulkCopyOptions.KeepNulls | SqlBulkCopyOptions.UseInternalTransaction | SqlBulkCopyOptions.TableLock, null))
             {
                 PrepareSqlBulkCopy(bulkCopy, model);
 
@@ -33,6 +33,7 @@ namespace DataTools.SqlBulkData
 
         private void PrepareSqlBulkCopy(SqlBulkCopy bulkCopy, ImportModel model)
         {
+            bulkCopy.BatchSize = 10000;
             bulkCopy.EnableStreaming = true;
             bulkCopy.BulkCopyTimeout = (int)database.DefaultTimeout.TotalSeconds;
             bulkCopy.DestinationTableName = Sql.Escape(model.Table.Schema, model.Table.Name);
