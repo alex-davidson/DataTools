@@ -15,19 +15,17 @@ namespace DataTools.SqlBulkData.Schema
     /// </remarks>
     public class ForeignKeyFunctionalEqualityComparer : IEqualityComparer<ForeignKey>
     {
-        private readonly StringComparer symbolComparer = StringComparer.OrdinalIgnoreCase;
-
         public bool Equals(ForeignKey x, ForeignKey y)
         {
             if (ReferenceEquals(x, y)) return true;
             if (x == null || y == null) return false;
-            if (!symbolComparer.Equals(x.Name, y.Name)) return false;
+            if (!SqlServerSymbolComparer.Instance.Equals(x.Name, y.Name)) return false;
             if (!Equals(x.ForeignTable, y.ForeignTable)) return false;
             if (!Equals(x.PrimaryTable, y.PrimaryTable)) return false;
             if (x.ForeignColumns.Length != y.ForeignColumns.Length) return false;
             if (x.PrimaryColumns.Length != y.PrimaryColumns.Length) return false;
-            if (!x.ForeignColumns.SequenceEqual(y.ForeignColumns, symbolComparer)) return false;
-            if (!x.PrimaryColumns.SequenceEqual(y.PrimaryColumns, symbolComparer)) return false;
+            if (!x.ForeignColumns.SequenceEqual(y.ForeignColumns, SqlServerSymbolComparer.Instance)) return false;
+            if (!x.PrimaryColumns.SequenceEqual(y.PrimaryColumns, SqlServerSymbolComparer.Instance)) return false;
             return true;
         }
 
@@ -35,7 +33,7 @@ namespace DataTools.SqlBulkData.Schema
         {
             unchecked
             {
-                var hashCode = obj.Name != null ? symbolComparer.GetHashCode(obj.Name) : 0;
+                var hashCode = obj.Name != null ? SqlServerSymbolComparer.Instance.GetHashCode(obj.Name) : 0;
                 hashCode = (hashCode * 397) ^ obj.ForeignTable.GetHashCode();
                 hashCode = (hashCode * 397) ^ obj.PrimaryTable.GetHashCode();
                 return hashCode;
