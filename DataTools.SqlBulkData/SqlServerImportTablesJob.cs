@@ -39,12 +39,20 @@ namespace DataTools.SqlBulkData
             log.Debug($"Found {tables.Count} tables.");
             var tableLookup = tables.ToLookup(t => t.Identify());
 
+            var viewsWithProblematicIndexes = new GetAllIndexesOnViewsQuery().List(sqlServerDatabase)
+                .Where(i => i.Type == Index.IndexType.Clustered)
+                .Select(i => i.Owner)
+                .Distinct()
+                .ToList();
+
             var disabledConstraintTables = new List<Table>();
+            var disabledIndexViews = new List<TableIdentifier>();
             var clearedTables = new Dictionary<TableIdentifier, Task>();
             try
             {
                 DisableAllConstraints(sqlServerDatabase, tables, disabledConstraintTables);
                 if (token.IsCancellationRequested) return;
+                DisableAllIndexesOnViews(sqlServerDatabase, viewsWithProblematicIndexes, disabledIndexViews);
                 if (token.IsCancellationRequested) return;
 
                 var tasks = files
@@ -61,6 +69,7 @@ namespace DataTools.SqlBulkData
             }
             finally
             {
+                EnableAllIndexesOnViews(sqlServerDatabase, disabledIndexViews);
                 EnableAllConstraints(sqlServerDatabase, disabledConstraintTables);
             }
             log.Info("Constraints are restored and verified.");
@@ -165,6 +174,41 @@ namespace DataTools.SqlBulkData
                     log.Error($"Failed to enable constraints on table: {table}");
                     log.Debug(ex);
                     // Should still re-enable constraints on all the other tables, so carry on.
+                }
+            }
+        }
+
+        private static void DisableAllIndexesOnViews(SqlServerDatabase database, IList<TableIdentifier> views, IList<TableIdentifier> disabled)
+        {
+            foreach (var view in views)
+            {
+                disabled.Add(view);
+                try
+                {
+                    new DisableAllIndexesStatement().Execute(database, view);
+                }
+                catch
+                {
+                    log.Error($"Failed to disable indexes on view: {view}");
+                    // Bail out and let the caller re-enable indexes on those we did already, if possible.
+                    throw;
+                }
+            }
+        }
+
+        private static void EnableAllIndexesOnViews(SqlServerDatabase database, IList<TableIdentifier> disabled)
+        {
+            foreach (var view in disabled)
+            {
+                try
+                {
+                    new EnableAllIndexesStatement().Execute(database, view);
+                }
+                catch (Exception ex)
+                {
+                    log.Error($"Failed to enable indexes on view: {view}");
+                    log.Debug(ex);
+                    // Should still re-enable indexes on all the other views, so carry on.
                 }
             }
         }
