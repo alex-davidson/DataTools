@@ -70,8 +70,12 @@
     <Compile Include="Columns\SqlServerUniqueIdentifierColumn.cs" />
     <Compile Include="Columns\SqlServerVariableLengthBytesColumn.cs" />
     <Compile Include="DisableConstraintsStatement.cs" />
+    <Compile Include="DisableAllIndexesStatement.cs" />
     <Compile Include="EnableConstraintsStatement.cs" />
+    <Compile Include="EnableAllIndexesStatement.cs" />
     <Compile Include="FastReadOnlyStream.cs" />
+    <Compile Include="GetAllIndexesOnViewsQuery.cs" />
+    <Compile Include="Index.cs" />
     <Compile Include="PositionTrackingReadOnlyStream.cs" />
     <Compile Include="LoggingVerbosity.cs" />
     <Compile Include="BulkTableFileReader.cs" />
