@@ -79,7 +79,7 @@
     <Compile Include="ColumnSerialiserValidator.cs" />
     <Compile Include="Serialisation\BufferUtils.cs" />
     <Compile Include="Serialisation\DecimalPacker.cs" />
-    <Compile Include="PersistedModel\TableIdentifier.cs" />
+    <Compile Include="Schema\TableIdentifier.cs" />
     <Compile Include="ColumnMetaInfo.cs" />
     <Compile Include="Columns\IColumnDefinition.cs" />
     <Compile Include="Columns\SqlServerBigIntColumn.cs" />

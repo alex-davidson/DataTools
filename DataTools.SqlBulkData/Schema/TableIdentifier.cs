@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DataTools.SqlBulkData.PersistedModel
+namespace DataTools.SqlBulkData.Schema
 {
     public struct TableIdentifier : IEquatable<TableIdentifier>
     {
