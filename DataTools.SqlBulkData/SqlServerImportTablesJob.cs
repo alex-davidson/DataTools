@@ -39,24 +39,44 @@ namespace DataTools.SqlBulkData
             log.Debug($"Found {tables.Count} tables.");
             var tableLookup = tables.ToLookup(t => t.Identify());
 
+            var foreignKeys = new GetAllForeignKeysQuery().List(sqlServerDatabase);
+            log.Debug($"Found {foreignKeys.Count} foreign keys.");
+
             var disabledConstraintTables = new List<Table>();
+            var deletedForeignKeys = new List<ForeignKey>();
             var clearedTables = new Dictionary<TableIdentifier, Task>();
+
             try
             {
                 DisableAllConstraints(sqlServerDatabase, tables, disabledConstraintTables);
                 if (token.IsCancellationRequested) return;
                 if (token.IsCancellationRequested) return;
 
-                var tasks = files
-                    // Simple heuristic for better parallelisation: start with large files.
-                    .OrderByDescending(f => new FileInfo(f).Length)
-                    .Select(f => Task.Run(() => ImportFromFile(f), token))
-                    .ToArray();
+                try
+                {
+                    // I would rather only drop foreign keys relevant to the tables being
+                    // imported, but this seems to cause occasional import failures
+                    // complaining of a 'schema change'. I suspect this happens when:
+                    // * an indexed view touches tables A and B,
+                    // * a bulk import against table A is in progress,
+                    // * a foreign key is dropped from table B.
+                    // It's easier and safer to just drop all of them up-front.
+                    DropAllForeignKeys(sqlServerDatabase, foreignKeys, deletedForeignKeys);
 
-                await Task.WhenAll(tasks);
-                token.ThrowIfCancellationRequested();
-                log.Info($"Imported {tablesImported} tables from {filesImported} files in {bulkFilesPath}");
+                    var tasks = files
+                        // Simple heuristic for better parallelisation: start with large files.
+                        .OrderByDescending(f => new FileInfo(f).Length)
+                        .Select(f => Task.Run(() => ImportFromFile(f), token))
+                        .ToArray();
 
+                    await Task.WhenAll(tasks);
+                    token.ThrowIfCancellationRequested();
+                    log.Info($"Imported {tablesImported} tables from {filesImported} files in {bulkFilesPath}");
+                }
+                finally
+                {
+                    RecreateForeignKeys(sqlServerDatabase, deletedForeignKeys);
+                }
                 new CheckConstraintsStatement().Execute(sqlServerDatabase);
             }
             finally
@@ -165,6 +185,46 @@ namespace DataTools.SqlBulkData
                     log.Error($"Failed to enable constraints on table: {table}");
                     log.Debug(ex);
                     // Should still re-enable constraints on all the other tables, so carry on.
+                }
+            }
+        }
+
+        private static void DropAllForeignKeys(SqlServerDatabase database, IList<ForeignKey> allForeignKeys, IList<ForeignKey> deleted)
+        {
+            foreach (var key in allForeignKeys)
+            {
+                try
+                {
+                    new DeleteForeignKeyStatement().Execute(database, key);
+                    deleted.Add(key);
+                }
+                catch
+                {
+                    log.Error($"Failed to delete foreign key: {key}");
+                    // Bail out and let the caller recreate constraints which we already deleted, if possible.
+                    throw;
+                }
+            }
+        }
+
+        private static void RecreateForeignKeys(SqlServerDatabase database, ICollection<ForeignKey> foreignKeys)
+        {
+            foreach (var key in foreignKeys)
+            {
+                try
+                {
+                    // By recreating the foreign keys 'disabled' we can recreate all of them, restoring
+                    // the schema to its pre-import state before we worry about constraint violations.
+                    // This makes it easier for the user to recover from failures, because their database
+                    // does at least contain all its original objects and they just need to resolve data
+                    // issues.
+                    new CreateForeignKeyStatement { WithNoCheck = true }.Execute(database, key);
+                }
+                catch (Exception ex)
+                {
+                    log.Error($"Failed to recreate foreign key: {key}");
+                    log.Debug(ex);
+                    // Should still re-create all other foreign keys, so carry on.
                 }
             }
         }
