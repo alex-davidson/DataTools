@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DataTools.SqlBulkData.Schema;
 
 namespace DataTools.SqlBulkData
 {
@@ -15,7 +16,7 @@ namespace DataTools.SqlBulkData
             if (ReferenceEquals(y, null)) return false;
             if (x.GetType() != y.GetType()) return false;
             return StringComparer.OrdinalIgnoreCase.Equals(NormaliseServer(x.Server), NormaliseServer(y.Server))
-                   && StringComparer.OrdinalIgnoreCase.Equals(x.Name, y.Name);
+                   && SqlServerSymbolComparer.Instance.Equals(x.Name, y.Name);
         }
 
         private static string NormaliseServer(string server)
@@ -30,7 +31,7 @@ namespace DataTools.SqlBulkData
             unchecked
             {
                 var hashCode = StringComparer.OrdinalIgnoreCase.GetHashCode(NormaliseServer(obj.Server));
-                hashCode = (hashCode * 397) ^ StringComparer.OrdinalIgnoreCase.GetHashCode(obj.Name);
+                hashCode = (hashCode * 397) ^ SqlServerSymbolComparer.Instance.GetHashCode(obj.Name);
                 return hashCode;
             }
         }

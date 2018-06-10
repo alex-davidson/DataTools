@@ -77,6 +77,7 @@
     <Compile Include="BulkTableFileReader.cs" />
     <Compile Include="BulkTableFileWriter.cs" />
     <Compile Include="ColumnSerialiserValidator.cs" />
+    <Compile Include="Schema\SqlServerSymbolComparer.cs" />
     <Compile Include="Serialisation\BufferUtils.cs" />
     <Compile Include="Serialisation\DecimalPacker.cs" />
     <Compile Include="Schema\TableIdentifier.cs" />

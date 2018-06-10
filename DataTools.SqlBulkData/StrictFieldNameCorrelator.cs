@@ -8,7 +8,7 @@ namespace DataTools.SqlBulkData
 {
     public class StrictFieldNameCorrelator : IFieldCorrelator
     {
-        public IEqualityComparer<string> FieldNameEqualityComparer { get; set; } = StringComparer.OrdinalIgnoreCase;
+        public IEqualityComparer<string> FieldNameEqualityComparer { get; set; } = SqlServerSymbolComparer.Instance;
 
         public Table.Field[] GetTargetFields(ColumnDescriptor sourceColumn, Table.Field[] targetFields)
         {
