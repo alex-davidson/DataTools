@@ -9,11 +9,13 @@ using System.Threading.Tasks;
 using DataTools.SqlBulkData.Columns;
 using DataTools.SqlBulkData.Schema;
 using DataTools.SqlBulkData.UnitTests.IntegrationTesting;
+using NCrunch.Framework;
 using NUnit.Framework;
 
 namespace DataTools.SqlBulkData.UnitTests
 {
     [TestFixture]
+    [ExclusivelyUses("Database")]
     public class SqlServerImportExportTests
     {
         public static Case[] SimpleCases = {
