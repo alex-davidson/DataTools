@@ -33,7 +33,7 @@ namespace DataTools.SqlBulkData.Serialisation
             }
             // Unseekable streams will generally throw when we try to get Position, but if
             // this is one of our wrapper position-tracking classes it will work fine:
-            var adjustment = stream.Position - position;
+            var adjustment = position - stream.Position;
             if (adjustment < 0) throw new NotSupportedException("Specified position is before current position.");
             if (!SeekReadForwardsInternal(stream, largeSeekBuffer, adjustment)) throw new EndOfStreamException();
         }
